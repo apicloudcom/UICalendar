@@ -1,11 +1,7 @@
-#概述
-
-可滑动查看的日历模块（内含iOS和Android）
-
-APICloud 的 UICalendar 模块是一个原生代码封装的日历模块。目的是为了让 APICloud 的广大开发者只需用 html+js 即可快速、高效的集成炫酷的日历到自己的 App 内。由于本模块 UI 布局界面为固定模式，不能满足日益增长的广大开发者对侧滑列表模块样式的需求。因此，广大原生模块开发者，可以参考此模块的开发方式、接口定义等开发规范，或者基于此模块开发出更多符合产品设计的新 UI 布局的模块，希望此模块能起到抛砖引玉的作用。
-
-##模块接口文档
-
+/*
+Title: UICalendar
+Description: UICalendar
+*/
 <div class="outline">
 [open](#m1)
 
@@ -36,7 +32,7 @@ UICalendar 是一个日历选择模块；可自定义日历的样式，添加特
 
 注：针对单日的样式优先级序列为：selected>setSpecialDate>specialDate>styles_specialDate>today
 
-![图片说明](http://docs.apicloud.com/img/docImage/UICalendar.jpg)
+![图片说明](/img/docImage/UICalendar.jpg)
 
 ***该模块源码已开源，地址：https://github.com/apicloudcom/UICalendar***
 

@@ -1,0 +1,322 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		717C53811B69C39600AEAA3B /* dateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 717C53751B69C39600AEAA3B /* dateModel.m */; };
+		717C53821B69C39600AEAA3B /* DateUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 717C53771B69C39600AEAA3B /* DateUtil.m */; };
+		717C53831B69C39600AEAA3B /* DMLazyScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 717C53791B69C39600AEAA3B /* DMLazyScrollView.m */; };
+		717C53841B69C39600AEAA3B /* SACalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 717C537B1B69C39600AEAA3B /* SACalendar.m */; };
+		717C53851B69C39600AEAA3B /* SACalendarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 717C537D1B69C39600AEAA3B /* SACalendarCell.m */; };
+		718773481B6EF4F200EACC42 /* UZUICalendar.m in Sources */ = {isa = PBXBuildFile; fileRef = 718773471B6EF4F200EACC42 /* UZUICalendar.m */; };
+		71E905161C17FBA70054A861 /* specialDatesModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 71E905151C17FBA70054A861 /* specialDatesModel.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		717C53571B69C31B00AEAA3B /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "include/$(PRODUCT_NAME)";
+			dstSubfolderSpec = 16;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		03E8709D1BA68A1400E12CCF /* NSDictionaryUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSDictionaryUtils.h; sourceTree = "<group>"; };
+		03E8709E1BA68A1400E12CCF /* UZAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UZAppDelegate.h; sourceTree = "<group>"; };
+		03E8709F1BA68A1400E12CCF /* UZAppUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UZAppUtils.h; sourceTree = "<group>"; };
+		03E870A01BA68A1400E12CCF /* UZModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UZModule.h; sourceTree = "<group>"; };
+		717C53591B69C31B00AEAA3B /* libUICalendar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUICalendar.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		717C53741B69C39600AEAA3B /* dateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dateModel.h; path = SACalendar/dateModel.h; sourceTree = "<group>"; };
+		717C53751B69C39600AEAA3B /* dateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = dateModel.m; path = SACalendar/dateModel.m; sourceTree = "<group>"; };
+		717C53761B69C39600AEAA3B /* DateUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DateUtil.h; sourceTree = "<group>"; };
+		717C53771B69C39600AEAA3B /* DateUtil.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DateUtil.m; sourceTree = "<group>"; };
+		717C53781B69C39600AEAA3B /* DMLazyScrollView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DMLazyScrollView.h; sourceTree = "<group>"; };
+		717C53791B69C39600AEAA3B /* DMLazyScrollView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DMLazyScrollView.m; sourceTree = "<group>"; };
+		717C537A1B69C39600AEAA3B /* SACalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SACalendar.h; sourceTree = "<group>"; };
+		717C537B1B69C39600AEAA3B /* SACalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SACalendar.m; sourceTree = "<group>"; };
+		717C537C1B69C39600AEAA3B /* SACalendarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SACalendarCell.h; sourceTree = "<group>"; };
+		717C537D1B69C39600AEAA3B /* SACalendarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SACalendarCell.m; sourceTree = "<group>"; };
+		717C537E1B69C39600AEAA3B /* SACalendarConstants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SACalendarConstants.h; sourceTree = "<group>"; };
+		718773461B6EF4F200EACC42 /* UZUICalendar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UZUICalendar.h; sourceTree = "<group>"; };
+		718773471B6EF4F200EACC42 /* UZUICalendar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = UZUICalendar.m; sourceTree = "<group>"; };
+		71E905141C17FBA70054A861 /* specialDatesModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = specialDatesModel.h; path = SACalendar/specialDatesModel.h; sourceTree = "<group>"; };
+		71E905151C17FBA70054A861 /* specialDatesModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = specialDatesModel.m; path = SACalendar/specialDatesModel.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		717C53561B69C31B00AEAA3B /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		03E8709C1BA68A1400E12CCF /* UZEngine */ = {
+			isa = PBXGroup;
+			children = (
+				03E8709D1BA68A1400E12CCF /* NSDictionaryUtils.h */,
+				03E8709E1BA68A1400E12CCF /* UZAppDelegate.h */,
+				03E8709F1BA68A1400E12CCF /* UZAppUtils.h */,
+				03E870A01BA68A1400E12CCF /* UZModule.h */,
+			);
+			path = UZEngine;
+			sourceTree = "<group>";
+		};
+		717C53501B69C31B00AEAA3B = {
+			isa = PBXGroup;
+			children = (
+				03E8709C1BA68A1400E12CCF /* UZEngine */,
+				717C53731B69C39600AEAA3B /* SACalendar */,
+				718773461B6EF4F200EACC42 /* UZUICalendar.h */,
+				718773471B6EF4F200EACC42 /* UZUICalendar.m */,
+				717C53741B69C39600AEAA3B /* dateModel.h */,
+				717C53751B69C39600AEAA3B /* dateModel.m */,
+				71E905141C17FBA70054A861 /* specialDatesModel.h */,
+				71E905151C17FBA70054A861 /* specialDatesModel.m */,
+				717C535A1B69C31B00AEAA3B /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		717C535A1B69C31B00AEAA3B /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				717C53591B69C31B00AEAA3B /* libUICalendar.a */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		717C53731B69C39600AEAA3B /* SACalendar */ = {
+			isa = PBXGroup;
+			children = (
+				717C53761B69C39600AEAA3B /* DateUtil.h */,
+				717C53771B69C39600AEAA3B /* DateUtil.m */,
+				717C53781B69C39600AEAA3B /* DMLazyScrollView.h */,
+				717C53791B69C39600AEAA3B /* DMLazyScrollView.m */,
+				717C537A1B69C39600AEAA3B /* SACalendar.h */,
+				717C537B1B69C39600AEAA3B /* SACalendar.m */,
+				717C537C1B69C39600AEAA3B /* SACalendarCell.h */,
+				717C537D1B69C39600AEAA3B /* SACalendarCell.m */,
+				717C537E1B69C39600AEAA3B /* SACalendarConstants.h */,
+			);
+			path = SACalendar;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		717C53581B69C31B00AEAA3B /* UICalendar */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 717C536D1B69C31B00AEAA3B /* Build configuration list for PBXNativeTarget "UICalendar" */;
+			buildPhases = (
+				717C53551B69C31B00AEAA3B /* Sources */,
+				717C53561B69C31B00AEAA3B /* Frameworks */,
+				717C53571B69C31B00AEAA3B /* CopyFiles */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = UICalendar;
+			productName = UICalendar;
+			productReference = 717C53591B69C31B00AEAA3B /* libUICalendar.a */;
+			productType = "com.apple.product-type.library.static";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		717C53511B69C31B00AEAA3B /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0640;
+				ORGANIZATIONNAME = zhenhua.liu;
+				TargetAttributes = {
+					717C53581B69C31B00AEAA3B = {
+						CreatedOnToolsVersion = 6.4;
+					};
+				};
+			};
+			buildConfigurationList = 717C53541B69C31B00AEAA3B /* Build configuration list for PBXProject "UICalendar" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = 717C53501B69C31B00AEAA3B;
+			productRefGroup = 717C535A1B69C31B00AEAA3B /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				717C53581B69C31B00AEAA3B /* UICalendar */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXSourcesBuildPhase section */
+		717C53551B69C31B00AEAA3B /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				717C53811B69C39600AEAA3B /* dateModel.m in Sources */,
+				717C53841B69C39600AEAA3B /* SACalendar.m in Sources */,
+				718773481B6EF4F200EACC42 /* UZUICalendar.m in Sources */,
+				717C53831B69C39600AEAA3B /* DMLazyScrollView.m in Sources */,
+				717C53821B69C39600AEAA3B /* DateUtil.m in Sources */,
+				717C53851B69C39600AEAA3B /* SACalendarCell.m in Sources */,
+				71E905161C17FBA70054A861 /* specialDatesModel.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		717C536B1B69C31B00AEAA3B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+			};
+			name = Debug;
+		};
+		717C536C1B69C31B00AEAA3B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		717C536E1B69C31B00AEAA3B /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					armv7s,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/SACalendar/UZEngine",
+				);
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		717C536F1B69C31B00AEAA3B /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = (
+					"$(ARCHS_STANDARD)",
+					armv7s,
+				);
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/SACalendar/UZEngine",
+				);
+				ONLY_ACTIVE_ARCH = NO;
+				OTHER_LDFLAGS = "-ObjC";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		717C53541B69C31B00AEAA3B /* Build configuration list for PBXProject "UICalendar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				717C536B1B69C31B00AEAA3B /* Debug */,
+				717C536C1B69C31B00AEAA3B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		717C536D1B69C31B00AEAA3B /* Build configuration list for PBXNativeTarget "UICalendar" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				717C536E1B69C31B00AEAA3B /* Debug */,
+				717C536F1B69C31B00AEAA3B /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 717C53511B69C31B00AEAA3B /* Project object */;
+}

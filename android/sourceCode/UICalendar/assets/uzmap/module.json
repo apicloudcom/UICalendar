@@ -1,0 +1,8 @@
+{
+	modules:[
+		{ 
+			name:'UICalendar',
+			class:'com.uzmap.pkg.uzmodules.UICalendar.UICalendar'
+		}
+	]
+}
