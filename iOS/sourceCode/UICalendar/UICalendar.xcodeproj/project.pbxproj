@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		67EB75412010D033004669CE /* UIView+cornerRadius.m in Sources */ = {isa = PBXBuildFile; fileRef = 67EB753F2010D033004669CE /* UIView+cornerRadius.m */; };
 		717C53811B69C39600AEAA3B /* dateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 717C53751B69C39600AEAA3B /* dateModel.m */; };
 		717C53821B69C39600AEAA3B /* DateUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 717C53771B69C39600AEAA3B /* DateUtil.m */; };
 		717C53831B69C39600AEAA3B /* DMLazyScrollView.m in Sources */ = {isa = PBXBuildFile; fileRef = 717C53791B69C39600AEAA3B /* DMLazyScrollView.m */; };
@@ -33,6 +34,8 @@
 		03E8709E1BA68A1400E12CCF /* UZAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UZAppDelegate.h; sourceTree = "<group>"; };
 		03E8709F1BA68A1400E12CCF /* UZAppUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UZAppUtils.h; sourceTree = "<group>"; };
 		03E870A01BA68A1400E12CCF /* UZModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UZModule.h; sourceTree = "<group>"; };
+		67EB753F2010D033004669CE /* UIView+cornerRadius.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+cornerRadius.m"; sourceTree = "<group>"; };
+		67EB75402010D033004669CE /* UIView+cornerRadius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+cornerRadius.h"; sourceTree = "<group>"; };
 		717C53591B69C31B00AEAA3B /* libUICalendar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUICalendar.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		717C53741B69C39600AEAA3B /* dateModel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = dateModel.h; path = SACalendar/dateModel.h; sourceTree = "<group>"; };
 		717C53751B69C39600AEAA3B /* dateModel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = dateModel.m; path = SACalendar/dateModel.m; sourceTree = "<group>"; };
@@ -99,6 +102,8 @@
 		717C53731B69C39600AEAA3B /* SACalendar */ = {
 			isa = PBXGroup;
 			children = (
+				67EB75402010D033004669CE /* UIView+cornerRadius.h */,
+				67EB753F2010D033004669CE /* UIView+cornerRadius.m */,
 				717C53761B69C39600AEAA3B /* DateUtil.h */,
 				717C53771B69C39600AEAA3B /* DateUtil.m */,
 				717C53781B69C39600AEAA3B /* DMLazyScrollView.h */,
@@ -173,6 +178,7 @@
 				718773481B6EF4F200EACC42 /* UZUICalendar.m in Sources */,
 				717C53831B69C39600AEAA3B /* DMLazyScrollView.m in Sources */,
 				717C53821B69C39600AEAA3B /* DateUtil.m in Sources */,
+				67EB75412010D033004669CE /* UIView+cornerRadius.m in Sources */,
 				717C53851B69C39600AEAA3B /* SACalendarCell.m in Sources */,
 				71E905161C17FBA70054A861 /* specialDatesModel.m in Sources */,
 			);

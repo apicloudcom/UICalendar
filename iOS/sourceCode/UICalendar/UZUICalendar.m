@@ -41,12 +41,17 @@
 
 #pragma mark - interFace -
 
+int kUZUICalendarMultipleSelect;
 - (void)open:(NSDictionary *)params_ {
     if (_superView) {
         [[_superView superview] bringSubviewToFront:_superView];
         _superView.hidden = NO;
         return;
     }
+    
+    BOOL multipleSelect = [params_ boolValueForKey:@"multipleSelect" defaultValue:NO];
+    kUZUICalendarMultipleSelect = multipleSelect ? 1 : 0;
+    
     NSDictionary *rect = [params_ dictValueForKey:@"rect" defaultValue:@{}];
     _nowDate = [[NSMutableDictionary alloc] init];
     NSString *switchStr = [params_ stringValueForKey:@"switchMode" defaultValue:@"vertical"];
@@ -160,6 +165,19 @@
     [self setDate:year month:month day: -1 cbId:[params_ floatValueForKey:@"cbId" defaultValue: -1] isDate:NO];
 }
 
+- (void)turnPage:(NSDictionary *)params_ {
+    if (!_calendar) {
+        return;
+    }
+    NSString *turnToDate = [params_ stringValueForKey:@"date" defaultValue:nil];
+    if (!turnToDate || (turnToDate.length <= 0)) {
+        return;
+    }
+    int turnToYear = [[turnToDate substringToIndex:4] intValue];
+    int turnToMonth = [[[turnToDate substringFromIndex:5] substringToIndex:2] intValue];
+    [self setDate:turnToYear month:turnToMonth day: -1 cbId:-1 isDate:NO];
+}
+
 - (void)close:(NSDictionary *)params_ {
     [_calendar removeFromSuperview];
     [_superView removeFromSuperview];
@@ -213,18 +231,20 @@
                                       specialDate:_specilDate
                                   scrollDirection:_switchMode];
     _calendar.delegate = self;
+    [_superView addSubview:_calendar];
     if (isDate) {
         [self sendResultEventWithCallbackId:cbId
                                    dataDict:[NSDictionary dictionaryWithObjectsAndKeys:[NSNumber numberWithBool:YES],@"status", nil]
                                     errDict:nil
                                    doDelete:NO];
     } else {
-        [self sendResultEventWithCallbackId:cbId
-                                   dataDict:_nowDate
-                                    errDict:nil
-                                   doDelete:YES];
+        if (cbId >= 0) {
+            [self sendResultEventWithCallbackId:cbId
+                                       dataDict:_nowDate
+                                        errDict:nil
+                                       doDelete:YES];
+        }
     }
-    [_superView addSubview:_calendar];
 }
 
 - (void)setSpecialDates:(NSDictionary *)params_ {

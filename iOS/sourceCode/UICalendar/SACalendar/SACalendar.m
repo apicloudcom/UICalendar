@@ -15,6 +15,7 @@
 #import "NSDictionaryUtils.h"
 #import "dateModel.h"
 #import "specialDatesModel.h"
+#import "UIView+cornerRadius.h"
 
 @interface SACalendar () <UICollectionViewDataSource, UICollectionViewDelegate, CalenCell>{
     DMLazyScrollView* scrollView;
@@ -50,9 +51,35 @@
     NSMutableArray *_weekDays;
 }
 
+@property (nonatomic,strong) NSMutableArray * selectArray;
+@property (nonatomic,strong) NSMutableArray * leftArray;
+@property (nonatomic,strong) NSMutableArray * rightArray;
+
 @end
 
 @implementation SACalendar
+
+- (NSMutableArray *)selectArray {
+    if (!_selectArray) {
+        _selectArray = [NSMutableArray array];
+    }
+    return _selectArray;
+}
+
+- (NSMutableArray *)leftArray {
+    if (!_leftArray) {
+        _leftArray = [NSMutableArray arrayWithObjects:@(0), @(7),@(14),@(21),@(28),@(35), nil];
+    }
+    return _leftArray;
+}
+
+- (NSMutableArray *)rightArray {
+    if (!_rightArray) {
+        _rightArray = [NSMutableArray arrayWithObjects:@(6), @(13),@(20),@(27),@(34),@(41), nil];
+    }
+    return _rightArray;
+}
+
 
 - (id)initWithFrame:(CGRect)frame {
     day = -1;
@@ -161,7 +188,7 @@
             month = m;
             year = y;
         }
-        
+       
         CGRect rect = CGRectMake(0, 0, self.frame.size.width, self.frame.size.height);
         
         if (direction == DMLazyScrollViewDirectionNone) {
@@ -189,7 +216,7 @@
 }
 
 #pragma mark - SCROLL VIEW DELEGATE -
-
+extern int kUZUICalendarMultipleSelect;
 - (UIViewController *) controllerAtIndex:(NSInteger) index {
     //Handle right scroll
     if (index == previousIndex && state == LOADSTATEPREVIOUS) {
@@ -199,7 +226,8 @@
         }
         scrollLeft = NO;
         selectedRow = DESELECT_ROW;
-        day = -1;
+#pragma mark - 修改day
+//        day = -1;
     }
     
     //Handle left scroll
@@ -210,7 +238,8 @@
         }
         scrollLeft = YES;
         selectedRow = -1;
-        day = -1;
+#pragma mark - 修改day
+//        day = -1;
     }
     previousIndex = (int)index;
     
@@ -263,6 +292,15 @@
     //if already exists, reload the calendar with new values
     UICollectionView *calendar = [calendars objectForKey:[NSString stringWithFormat:@"%li",(long)index]];
     
+    #pragma mark - ---
+    if (kUZUICalendarMultipleSelect == 1) {
+        self.selectArray = nil;
+        self.leftArray = nil;
+        self.rightArray = nil;
+        selectedRow = DESELECT_ROW;
+        day = -1;
+    }
+    
     [calendar reloadData];
     
     //create new view controller and add it to a dictionary for caching
@@ -274,6 +312,11 @@
 #warning xiugai
         CGRect rect = CGRectMake(0,self.frame.size.height/7, self.frame.size.width, self.frame.size.height);
         UICollectionView *calendar = [[UICollectionView alloc]initWithFrame:rect collectionViewLayout:flowLayout];
+#pragma mark - UICollectionView 适配iOS11
+        if (@available(iOS 11.0, *)) {
+            calendar.contentInsetAdjustmentBehavior = UIScrollViewContentInsetAdjustmentNever;
+        }
+        
         calendar.dataSource = self;
         calendar.delegate = self;
         calendar.pagingEnabled = NO;
@@ -370,6 +413,7 @@
         cell.topLineView.hidden = cell.dateLabel.hidden = NO;
         cell.circleView.hidden = YES;
         
+        BOOL special = NO;
         // if the cell is the current date, display the red circle
         BOOL isToday = NO;
         if (indexPath.row - firstDay + 1 == current_date
@@ -420,6 +464,7 @@
         if (!selectedColor.length) {
             selectedColor = @"#fff";
         }
+        
         if (indexPath.row == selectedRow ||
             (day == ((int)indexPath.row - firstDay + 1) && collectionView.tag == 0)) {
             cell.circleView.hidden = YES;
@@ -432,7 +477,7 @@
                                                               userInfo:@{@"selectedDay":selectedDayIndex}];
         } else {
             cell.selectedView.hidden = YES;
-            // 不选中下的today
+            // 不选中下的today（工作日）
             if (indexPath.row - firstDay + 1 == current_date
                 && monthToLoad == current_month
                 && yearToLoad == current_year) {
@@ -460,11 +505,42 @@
                 }
                 cell.dateLabel.textColor = [UZAppUtils colorFromNSString:color];
             }
-            
+            //周末的字体颜色
             for (int i = 0; i < _weekDays.count; i++) {
                 if (indexPath.row == [_weekDays[i] integerValue]) {
                     cell.dateLabel.textColor = [UZAppUtils colorFromNSString:_weekendColor];
                 }
+            }
+            // 不选中下的today（周末）
+            if (indexPath.row - firstDay + 1 == current_date
+                 && monthToLoad == current_month
+                 && yearToLoad == current_year) {
+//                cell.circleView.hidden = NO;    ///
+                NSString *todayBg = [_today stringValueForKey:@"bg" defaultValue:@""];
+                //当日的背景
+                if ([UZAppUtils isValidColor:todayBg]) {
+                    cell.circleView.backgroundColor = [UZAppUtils colorFromNSString:todayBg];
+                    cell.circleView.layer.masksToBounds = YES;
+                    cell.todayImg.hidden = YES;
+                    cell.circleView.hidden = NO;    ///
+                } else {
+                    UIImage * image = [UIImage imageWithContentsOfFile:[self.delegate getPath:todayBg]];
+                    if (image) {
+                        cell.todayImg.hidden = NO;
+                        cell.todayImg.image = image;
+                        cell.circleView.hidden = NO;
+                        cell.circleView.backgroundColor = [UIColor clearColor];
+                    }else {
+                        cell.todayImg.hidden = YES;
+                        cell.circleView.hidden = YES;
+                    }
+                }
+                //当日的字体颜色
+                NSString *color = [_today stringValueForKey:@"color" defaultValue:@"#a8d500"];
+                if (!color.length) {
+                    color = @"#a8d500";
+                }
+                cell.dateLabel.textColor = [UZAppUtils colorFromNSString:color];
             }
             //特殊日期
             /*（判断是否选中为指定日：day && collectionView.tag == 0），setSpecial时未传day,故这里需重新判断(主要根据
@@ -473,10 +549,14 @@
                setSpecial  传的day为0, 当specialDates有指定日期时collectionView.tag == 0，
              */
             // 判断是否为today：day && month && year）,setSpecial时未传day,故这里需重新判断
+
             for (specialDatesModel *spDatesModel in _specialDate) {
                 if (((indexPath.row - firstDay + 1) == [spDatesModel.spDateDate.day integerValue])
                     && (monthToLoad == [spDatesModel.spDateDate.month integerValue])
                     && (yearToLoad == [spDatesModel.spDateDate.year integerValue])) {
+                    
+                    special = YES;
+                    
                     //普通日期选中后的背景Bg
                     NSString *selectedBg = [_date stringValueForKey:@"selectedBg" defaultValue:@"#a8d500"];
                     if (!selectedBg.length) {
@@ -491,13 +571,15 @@
                         }
                     }
                     //判断是否是被选中过的日期 即指定日期
-                    if (([self.selectedDay intValue]-firstDay+1) == [spDatesModel.spDateDate.day integerValue]) {
-                        isSelectedDay = true;
-                    }
+//                    if (([self.selectedDay intValue]-firstDay+1) == [spDatesModel.spDateDate.day integerValue]) {
+//                        isSelectedDay = true;
+//                    }
+                    //ollectionView.tag == 0 && isSelectedDay
+                    
                     if (collectionView.tag == 0 && isSelectedDay) {  //特殊日期中的指定日期
-                        cell.circleView.hidden = YES;
-                        cell.selectedView.hidden = NO;
-                        cell.dateLabel.textColor = [UZAppUtils colorFromNSString:selectedColor];
+//                        cell.circleView.hidden = YES;
+//                        cell.selectedView.hidden = NO;
+//                        cell.dateLabel.textColor = [UZAppUtils colorFromNSString:selectedColor];
                     } else {
                         //open->styles->specialDate->bg / setSpecialDates->specialDates->bg
                         NSString *specialbg = spDatesModel.spDateBg;
@@ -529,6 +611,7 @@
                                     //当日的背景
                                     cell.todayImg.hidden = NO;
                                     cell.todayImg.image = [UIImage imageWithContentsOfFile:[self.delegate getPath:todayBg]];
+                                    
                                 }
                                 continue;
                             } else {
@@ -584,12 +667,70 @@
                 }
             }
         }
+        
+#pragma mark - 修改选中cell
+        if (indexPath.row == selectedRow ||
+            day == ((int)indexPath.row - firstDay + 1)) {
+            cell.selectedView.hidden = NO;
+            cell.dateLabel.textColor = [UZAppUtils colorFromNSString:selectedColor];
+        }
+        
         NSMutableDictionary *sendDict = [NSMutableDictionary dictionaryWithCapacity:3];
         [sendDict setObject:[NSNumber numberWithInt:yearToLoad] forKey:@"year"];
         [sendDict setObject:[NSNumber numberWithInt:monthToLoad] forKey:@"month"];
         [self.delegate callBack:sendDict isShow:NO];
         // set the appropriate date for the cell
         cell.dateLabel.text = [NSString stringWithFormat:@"%i",(int)indexPath.row - firstDay + 1];
+        
+        #pragma mark - ---
+        if (kUZUICalendarMultipleSelect == 1) {
+//            cell.selectedView.hidden = YES; // 翻月后清除选择日期
+            [cell.selectedView lgg_viewCancelRoundingCorners];
+            // 设置选中
+            for (NSNumber * row in self.selectArray) {
+                if (indexPath.row == [row integerValue]) {
+                    cell.selectedView.hidden = NO;
+                    cell.dateLabel.textColor = [UZAppUtils colorFromNSString:selectedColor];
+                    if (indexPath.row - firstDay + 1 == current_date
+                        && monthToLoad == current_month
+                        && yearToLoad == current_year) {
+                        cell.circleView.hidden = YES;
+                        cell.todayImg.hidden = YES;
+                    }
+                    if (special) {
+                        cell.circleView.hidden = YES;
+                    }
+                    
+                    // 设置圆角
+                    BOOL left = NO;
+                    for (NSNumber * lrow in self.leftArray) {
+                        if (indexPath.row == [lrow integerValue]) {
+                            left = YES;
+                            break;
+                        }
+                    }
+                
+                    BOOL right = NO;
+                    for (NSNumber * rrow in self.rightArray) {
+                        if (indexPath.row == [rrow integerValue]) {
+                            right = YES;
+                            break;
+                        }
+                    }
+                    
+                    if (left && right) {
+                        [cell.selectedView lgg_viewRoundingCorners:UIRectCornerAllCorners];
+                    }else if (left){
+                        [cell.selectedView lgg_viewRoundingCorners:UIRectCornerTopLeft | UIRectCornerBottomLeft];
+                    }else if (right) {
+                        [cell.selectedView lgg_viewRoundingCorners:UIRectCornerTopRight | UIRectCornerBottomRight];
+                    }
+                    
+                    break;
+                }
+            }
+        }
+        
     }
     [cell.dateLabel setFont:[UIFont systemFontOfSize:[_date floatValueForKey:@"size" defaultValue:24]]];
     return cell;
@@ -601,6 +742,8 @@
 - (CGSize)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout sizeForItemAtIndexPath:(NSIndexPath *)indexPath {
     int width = self.frame.size.width;
     int height = self.frame.size.height - headerSize;
+//    float width = self.frame.size.width;
+//    float height = self.frame.size.height - headerSize;
     cellSize = CGSizeMake(width/DAYS_IN_WEEKS, height / MAX_WEEK);
     return CGSizeMake(width/DAYS_IN_WEEKS, height / MAX_WEEK);
 }
@@ -621,7 +764,8 @@
  */
 - (UIEdgeInsets)collectionView:(UICollectionView *)collectionView layout:(UICollectionViewLayout*)collectionViewLayout insetForSectionAtIndex:(NSInteger)section {
     int width = self.frame.size.width;
-    int offset = (width % DAYS_IN_WEEKS) / 4;
+//    int offset = (width % DAYS_IN_WEEKS) / 4;
+    float offset = (width % DAYS_IN_WEEKS) / 2;
     // top, left, bottom, right
     return UIEdgeInsetsMake(0,offset,0,offset);
 }
@@ -640,6 +784,8 @@
             [_delegate SACalendar:self didSelectDate:dateSelected month:month year:year];
         }
         selectedRow = (int)indexPath.row;
+    #pragma mark - 修改day
+        day = (int)indexPath.row - firstDay + 1;
     } else {
         selectedRow = DESELECT_ROW;
         day = -1;
@@ -657,6 +803,66 @@
             eventType = @"special";
         }
     }
+    
+    #pragma mark - ---
+    if (kUZUICalendarMultipleSelect == 1) {
+        SACalendarCell * cell = (SACalendarCell *)[collectionView cellForItemAtIndexPath:indexPath];
+        if (cell.selectedView.isHidden == NO) { // 取消选中效果
+            selectedRow = DESELECT_ROW;
+            day = -1;
+            [self.selectArray removeObject:@(indexPath.row)];
+            eventType = [eventType isEqualToString:@"normal"] ? @"cancelNormal" : @"cancelSpecial";
+            
+            // 圆角效果
+            if ((indexPath.row != 0) && (indexPath.row !=7) && (indexPath.row !=14) && (indexPath.row !=21) && (indexPath.row !=28) && (indexPath.row !=35)) {
+                // 左边
+                NSIndexPath * preIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
+                SACalendarCell * preCell = (SACalendarCell *)[collectionView cellForItemAtIndexPath:preIndexPath];
+                if (preCell.selectedView.isHidden == NO) {
+                    [self.rightArray addObject:@(indexPath.row-1)];
+                }else{
+                    [self.leftArray removeObject:@(indexPath.row)];
+                }
+            }
+            if ((indexPath.row != 41) && (indexPath.row !=6) && (indexPath.row !=13) && (indexPath.row !=20) && (indexPath.row !=27) && (indexPath.row !=34)) {
+                // 右边
+                NSIndexPath * nextIndexPath = [NSIndexPath indexPathForRow:indexPath.row+1 inSection:indexPath.section];
+                SACalendarCell * nextCell = (SACalendarCell *)[collectionView cellForItemAtIndexPath:nextIndexPath];
+                if (nextCell.selectedView.isHidden == NO) {
+                    [self.leftArray addObject:@(indexPath.row+1)];
+                }else {
+                    [self.rightArray removeObject:@(indexPath.row)];
+                }
+            }
+        }else{ // 添加选中效果
+            [self.selectArray addObject:@(indexPath.row)];
+            
+            // 圆角效果
+            if ((indexPath.row != 0) && (indexPath.row !=7) && (indexPath.row !=14) && (indexPath.row !=21) && (indexPath.row !=28) && (indexPath.row !=35)) {
+                // 左边
+                NSIndexPath * preIndexPath = [NSIndexPath indexPathForRow:indexPath.row-1 inSection:indexPath.section];
+                SACalendarCell * preCell = (SACalendarCell *)[collectionView cellForItemAtIndexPath:preIndexPath];
+                if (preCell.selectedView.isHidden == YES) {
+                    [self.leftArray addObject:@(indexPath.row)];
+                }else{
+                    [self.rightArray removeObject:@(indexPath.row-1)];
+                }
+            }
+            
+            if ((indexPath.row != 41) && (indexPath.row !=6) && (indexPath.row !=13) && (indexPath.row !=20) && (indexPath.row !=27) && (indexPath.row !=34)) {
+                // 右边
+                NSIndexPath * nextIndexPath = [NSIndexPath indexPathForRow:indexPath.row+1 inSection:indexPath.section];
+                SACalendarCell * nextCell = (SACalendarCell *)[collectionView cellForItemAtIndexPath:nextIndexPath];
+                if (nextCell.selectedView.isHidden == YES) {
+                    [self.rightArray addObject:@(indexPath.row)];
+                }else{
+                    [self.leftArray removeObject:@(indexPath.row+1)];
+                }
+            }
+            
+        }
+    }
+    
     NSMutableDictionary *dateDict = [NSMutableDictionary dictionaryWithCapacity:3];
     [dateDict setObject:[NSNumber numberWithInt:yearToLoad] forKey:@"year"];
     [dateDict setObject:[NSNumber numberWithInt:monthToLoad] forKey:@"month"];

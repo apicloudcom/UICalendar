@@ -127,6 +127,7 @@ enum {
     self.delegate = self;
     self.contentSize = CGSizeMake(self.frame.size.width, self.contentSize.height);
     currentPage = NSNotFound;
+    
 }
 
 - (void) setNumberOfPages:(NSUInteger)pages {

@@ -12,6 +12,7 @@
 #import "NSDictionaryUtils.h"
 #import "UZAppUtils.h"
 
+
 @implementation SACalendarCell
 /**
  *  Draw the basic components of the cell, including the top grey line, the red current date circle,
@@ -21,6 +22,7 @@
  *
  *  @return initialized cell
  */
+extern int kUZUICalendarMultipleSelect;
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
@@ -52,7 +54,10 @@
         
         NSDictionary *date = [styles dictValueForKey:@"date" defaultValue:@{}];
         
-        self.selectedView = [[UIView alloc] initWithFrame:rect];
+        #pragma mark - ---
+//        self.selectedView = [[UIView alloc] initWithFrame:rect];
+//        self.selectedView = [[UIView alloc] initWithFrame:CGRectMake(rect.origin.x-0.5, rect.origin.y+5, rect.size.width+1, rect.size.height-10)];
+        self.selectedView = kUZUICalendarMultipleSelect ? [[UIView alloc] initWithFrame:CGRectMake(rect.origin.x-0.5, rect.origin.y+5, rect.size.width+1, rect.size.height-10)] : [[UIView alloc] initWithFrame:rect];
         
         NSString *selectedBg = [date stringValueForKey:@"selectedBg" defaultValue:@""];
         _img = [[UIImageView alloc] initWithFrame:CGRectMake(0, 0, frame.size.width, frame.size.height)];
@@ -70,6 +75,7 @@
         [self.viewForBaselineLayout addSubview:self.selectedView];
         [self.viewForBaselineLayout addSubview:self.dateLabel];
         [self.viewForBaselineLayout addSubview:self.specialView];
+        
     }
     return self;
 }
