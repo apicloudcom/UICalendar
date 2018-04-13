@@ -41,6 +41,7 @@ selected>setSpecialDate>specialDate>styles_specialDate>today
 ## [实例widget下载地址](https://github.com/apicloudcom/UICalendar-Example/archive/master.zip)
 
 
+
 # 模块接口
 
 <div id="open"></div>
@@ -52,6 +53,12 @@ selected>setSpecialDate>specialDate>styles_specialDate>today
 open({params}, callback(ret))
 
 ## params
+
+multipleSelect：
+
+- 类型：布尔类型
+- 描述：（可选项）是否可以多选日期
+- 默认值：false
 
 rect：
 
@@ -150,6 +157,9 @@ ret：
                                 //switch（水平或垂直切换月份）
                                 //special（点击特殊日期）
                                 //normal（点击普通日期）
+                                //cancelNormal（取消点击普通日期）
+                                //cancelSpecial（取消点击特殊日期）
+                                                                                                
 	year: 2015,                 //数字类型；当前选择的年份
 	month: 7,                   //数字类型；当前选择的月份
 	day: 27                     //数字类型；当前选择的日期
@@ -515,7 +525,7 @@ iOS系统，Android系统
 
 # **setDate**
 
-设置选中日期
+设置选中日期（不支持日期多选模式）
 
 setDate({params}, callback(ret))
 

@@ -48,13 +48,13 @@ public class GridAdapter extends BaseAdapter {
 	@SuppressWarnings("unused")
 	private String mSelectedDateTxt;
 
-	private TextView mTvSun;
-	private TextView mTvMon;
-	private TextView mTvTue;
-	private TextView mTvWed;
-	private TextView mTvThurs;
-	private TextView mTvFri;
-	private TextView mTvSat;
+	private TextView tv_sun;
+	private TextView tv_mon;
+	private TextView tv_tue;
+	private TextView tv_wed;
+	private TextView tv_thurs;
+	private TextView tv_fri;
+	private TextView tv_sat;
 
 	public void setDays(String[] days) {
 		this.days = days;
@@ -76,8 +76,7 @@ public class GridAdapter extends BaseAdapter {
 	}
 
 	@SuppressLint("SimpleDateFormat")
-	public GridAdapter(Context c, Calendar monthCalendar, GridView gridview,
-			int height, LinearLayout linearLayout) {
+	public GridAdapter(Context c, Calendar monthCalendar, GridView gridview, int height, LinearLayout linearLayout) {
 		// android
 		mMonth = monthCalendar;
 		mSelectedDate = Calendar.getInstance();
@@ -93,25 +92,25 @@ public class GridAdapter extends BaseAdapter {
 	private void initView(LinearLayout linearLayout) {
 
 		int tv_sunID = UZResourcesIDFinder.getResIdID("tv_sun");
-		mTvSun = (TextView) linearLayout.findViewById(tv_sunID);
+		tv_sun = (TextView) linearLayout.findViewById(tv_sunID);
 
 		int tv_monID = UZResourcesIDFinder.getResIdID("tv_mon");
-		mTvMon = (TextView) linearLayout.findViewById(tv_monID);
+		tv_mon = (TextView) linearLayout.findViewById(tv_monID);
 
 		int tv_tueID = UZResourcesIDFinder.getResIdID("tv_tue");
-		mTvTue = (TextView) linearLayout.findViewById(tv_tueID);
+		tv_tue = (TextView) linearLayout.findViewById(tv_tueID);
 
 		int tv_wedID = UZResourcesIDFinder.getResIdID("tv_wed");
-		mTvWed = (TextView) linearLayout.findViewById(tv_wedID);
+		tv_wed = (TextView) linearLayout.findViewById(tv_wedID);
 
 		int tv_thursID = UZResourcesIDFinder.getResIdID("tv_thurs");
-		mTvThurs = (TextView) linearLayout.findViewById(tv_thursID);
+		tv_thurs = (TextView) linearLayout.findViewById(tv_thursID);
 
 		int tv_friID = UZResourcesIDFinder.getResIdID("tv_fri");
-		mTvFri = (TextView) linearLayout.findViewById(tv_friID);
+		tv_fri = (TextView) linearLayout.findViewById(tv_friID);
 
 		int tv_satID = UZResourcesIDFinder.getResIdID("tv_sat");
-		mTvSat = (TextView) linearLayout.findViewById(tv_satID);
+		tv_sat = (TextView) linearLayout.findViewById(tv_satID);
 
 	}
 
@@ -140,10 +139,8 @@ public class GridAdapter extends BaseAdapter {
 		View view;
 		ViewHolder viewHold;
 		if (convertView == null) {
-			LayoutInflater vi = (LayoutInflater) mContext
-					.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-			int layoutID = UZResourcesIDFinder
-					.getResLayoutID("mo_calendar_calendar_item");
+			LayoutInflater vi = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+			int layoutID = UZResourcesIDFinder.getResLayoutID("mo_calendar_calendar_item");
 			view = vi.inflate(layoutID, null);
 			viewHold = new ViewHolder();
 			int dateID = UZResourcesIDFinder.getResIdID("date");
@@ -157,7 +154,7 @@ public class GridAdapter extends BaseAdapter {
 			view = convertView;
 			viewHold = (ViewHolder) view.getTag();
 		}
-		
+
 		viewHold.tv_day.destroyDrawingCache();
 		int height = mGrid.getHeight() / 6;
 		LayoutParams lp = new LayoutParams(-1, height);
@@ -165,22 +162,22 @@ public class GridAdapter extends BaseAdapter {
 		viewHold.tv_day.setLayoutParams(lp);
 		viewHold.backImg.setLayoutParams(lp);
 
-		mTvMon.setTextSize(mConfig.weekSize);
-		mTvTue.setTextSize(mConfig.weekSize);
-		mTvWed.setTextSize(mConfig.weekSize);
-		mTvThurs.setTextSize(mConfig.weekSize);
-		mTvFri.setTextSize(mConfig.weekSize);
+		tv_mon.setTextSize(mConfig.weekSize);
+		tv_tue.setTextSize(mConfig.weekSize);
+		tv_wed.setTextSize(mConfig.weekSize);
+		tv_thurs.setTextSize(mConfig.weekSize);
+		tv_fri.setTextSize(mConfig.weekSize);
 
-		mTvSun.setTextSize(mConfig.weekSize);
-		mTvSat.setTextSize(mConfig.weekSize);
+		tv_sun.setTextSize(mConfig.weekSize);
+		tv_sat.setTextSize(mConfig.weekSize);
 
-		mTvMon.setTextColor(mConfig.weekdayColor);
-		mTvTue.setTextColor(mConfig.weekdayColor);
-		mTvWed.setTextColor(mConfig.weekdayColor);
-		mTvThurs.setTextColor(mConfig.weekdayColor);
-		mTvFri.setTextColor(mConfig.weekdayColor);
-		mTvSun.setTextColor(mConfig.weekendColor);
-		mTvSat.setTextColor(mConfig.weekendColor);
+		tv_mon.setTextColor(mConfig.weekdayColor);
+		tv_tue.setTextColor(mConfig.weekdayColor);
+		tv_wed.setTextColor(mConfig.weekdayColor);
+		tv_thurs.setTextColor(mConfig.weekdayColor);
+		tv_fri.setTextColor(mConfig.weekdayColor);
+		tv_sun.setTextColor(mConfig.weekendColor);
+		tv_sat.setTextColor(mConfig.weekendColor);
 
 		viewHold.tv_day.setTextSize(mConfig.dateSize);
 		viewHold.tv_day.setTextColor(mConfig.dateColor);
@@ -215,11 +212,7 @@ public class GridAdapter extends BaseAdapter {
 		}
 
 		// Today
-		if (mMonth.get(Calendar.YEAR) == mSelectedDate.get(Calendar.YEAR)
-				&& mMonth.get(Calendar.MONTH) == mSelectedDate
-						.get(Calendar.MONTH)
-				&& days[position].equals(""
-						+ mSelectedDate.get(Calendar.DAY_OF_MONTH))) {
+		if (mMonth.get(Calendar.YEAR) == mSelectedDate.get(Calendar.YEAR) && mMonth.get(Calendar.MONTH) == mSelectedDate.get(Calendar.MONTH) && days[position].equals("" + mSelectedDate.get(Calendar.DAY_OF_MONTH))) {
 			if (mConfig.todayBitmap != null) {
 				viewHold.backImg.setImageBitmap(mConfig.todayBitmap);
 				viewHold.tv_day.setBackgroundDrawable(null);
@@ -230,11 +223,7 @@ public class GridAdapter extends BaseAdapter {
 		}
 
 		// Other Special Day
-		if (date.length() > 0
-				&& mSpecialDates != null
-				&& mSpecialDates.contains(new SpecicalDateStyle(
-						android.text.format.DateFormat
-								.format("yyyy-MM", mMonth) + "-" + date))) {
+		if (date.length() > 0 && mSpecialDates != null && mSpecialDates.contains(new SpecicalDateStyle(android.text.format.DateFormat.format("yyyy-MM", mMonth) + "-" + date))) {
 
 			if (mConfig.specialDateBgBitmap != null) {
 				viewHold.backImg.setImageBitmap(mConfig.specialDateBgBitmap);
@@ -242,13 +231,11 @@ public class GridAdapter extends BaseAdapter {
 			} else {
 				viewHold.tv_day.setBackgroundColor(mConfig.specialDateBg);
 			}
-			
+
 			viewHold.tv_day.setTextColor(mConfig.specialDateColor);
 
-			String curDateStr = android.text.format.DateFormat.format(
-					"yyyy-MM", mMonth) + "-" + date;
-			SpecicalDateStyle curSpecialDate = getCurrentSpecialDate(
-					curDateStr, mSpecialDates);
+			String curDateStr = android.text.format.DateFormat.format("yyyy-MM", mMonth) + "-" + date;
+			SpecicalDateStyle curSpecialDate = getCurrentSpecialDate(curDateStr, mSpecialDates);
 
 			if (curSpecialDate != null && curSpecialDate.hasBg) {
 				if (curSpecialDate.bg != null) {
@@ -267,7 +254,39 @@ public class GridAdapter extends BaseAdapter {
 
 		}
 
+		// if(position == mCurrentIndex){
+		//
+		// if (mConfig.dateSelectedBitmap != null) {
+		// viewHold.backImg.setImageBitmap(mConfig.dateSelectedBitmap);
+		// viewHold.tv_day.setBackgroundDrawable(null);
+		// } else {
+		// viewHold.tv_day.setBackgroundColor(mConfig.dateSelectedBg);
+		// }
+		// viewHold.tv_day.setTextColor(mConfig.dateSelectedColor);
+		// }
+
+		if (!TextUtils.isEmpty(mCurrentText) && mCurrentText.equals(viewHold.tv_day.getText())) {
+			if (mConfig.dateSelectedBitmap != null) {
+				viewHold.backImg.setImageBitmap(mConfig.dateSelectedBitmap);
+				viewHold.tv_day.setBackgroundDrawable(null);
+			} else {
+				viewHold.tv_day.setBackgroundColor(mConfig.dateSelectedBg);
+			}
+			viewHold.tv_day.setTextColor(mConfig.dateSelectedColor);
+		}
+
 		return view;
+	}
+
+	public int mCurrentIndex = -1;
+	public String mCurrentText = "";
+
+	public void setCurrentIndex(int curIndex) {
+		this.mCurrentIndex = curIndex;
+	}
+
+	public void setCurrentDay(String curDay) {
+		mCurrentText = curDay;
 	}
 
 	public Calendar getMonth() {
@@ -296,8 +315,7 @@ public class GridAdapter extends BaseAdapter {
 		this.mConfig = config;
 	}
 
-	public SpecicalDateStyle getCurrentSpecialDate(String dateText,
-			ArrayList<SpecicalDateStyle> dateList) {
+	public SpecicalDateStyle getCurrentSpecialDate(String dateText, ArrayList<SpecicalDateStyle> dateList) {
 
 		if (TextUtils.isEmpty(dateText)) {
 			return null;
@@ -311,5 +329,5 @@ public class GridAdapter extends BaseAdapter {
 
 		return null;
 	}
-	
+
 }

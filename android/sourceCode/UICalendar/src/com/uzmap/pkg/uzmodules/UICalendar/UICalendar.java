@@ -10,6 +10,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -69,6 +71,7 @@ public class UICalendar extends UZModule {
 		} else {
 			mCalendarView.setBackgroundColor(config.bg);
 		}
+		
 		insertViewToCurWindow(mCalendarView, parms, config.fixedOn,
 				config.fixed);
 	}
@@ -138,7 +141,6 @@ public class UICalendar extends UZModule {
 		if (!TextUtils.isEmpty(dateText)) {
 			mCalendarView.setDate(dateText, uzContext, ignoreSelected);
 		} else {
-
 			Calendar calendar = Calendar.getInstance();
 			int year = calendar.get(Calendar.YEAR);
 			int month = calendar.get(Calendar.MONTH) + 1;
@@ -167,14 +169,12 @@ public class UICalendar extends UZModule {
 							config.specialDateList, styleObj.optString("date"));
 					setSpecialStyle(tmp, styleItem);
 				}
-
+				
 				if (mCalendarView != null) {
 					mCalendarView.setSpecialDates(config.specialDateList);
 				}
-
 			}
 		}
-
 	}
 
 	public void setSpecialStyle(SpecicalDateStyle oldStyle,
@@ -193,7 +193,6 @@ public class UICalendar extends UZModule {
 		if (newStyle.hasTextColor) {
 			oldStyle.color = newStyle.color;
 		}
-
 	}
 
 	public SpecicalDateStyle parseStyle(JSONObject styleObj) {
@@ -224,7 +223,6 @@ public class UICalendar extends UZModule {
 		}
 
 		return eStyle;
-
 	}
 
 	public SpecicalDateStyle findSpecialDate(
@@ -280,5 +278,33 @@ public class UICalendar extends UZModule {
 		}
 
 	}
+	
+	public void jsmethod_turnPage(UZModuleContext uzContext){
+		String dateText = verifyDate(uzContext.optString("date"));
 
+		if (!TextUtils.isEmpty(dateText)) {
+			mCalendarView.setDate(dateText, uzContext, true);
+		} else {
+			
+			Calendar calendar = Calendar.getInstance();
+			int year = calendar.get(Calendar.YEAR);
+			int month = calendar.get(Calendar.MONTH) + 1;
+			int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+			String currentDate = year + "-" + month + "-" + day;
+			mCalendarView.setDate(currentDate, uzContext, true);
+
+		}
+	}
+	
+	public String verifyDate(String date){
+		
+		Pattern pattern = Pattern.compile("\\d{4}-\\d{1,2}");
+		Matcher matcher = pattern.matcher(date);
+		if(matcher.matches()){
+			return date + "-01";
+		}
+		return date;
+		
+	}
 }

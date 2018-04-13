@@ -1,3 +1,4 @@
+
 /**
  * APICloud Modules
  * Copyright (c) 2014-2015 by APICloud, Inc. All Rights Reserved.
@@ -18,7 +19,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.ColorDrawable;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.text.TextUtils;
@@ -74,7 +77,7 @@ public class CalendarView extends LinearLayout {
 		super(context, attrs);
 		this.mContext = context;
 	}
-	
+
 	public void setSpecialDates(ArrayList<SpecicalDateStyle> specialDateItems){
 		this.mSpecialDateItems = specialDateItems;
 		refreshDays();
@@ -120,6 +123,8 @@ public class CalendarView extends LinearLayout {
 					todayCalendar.get(Calendar.DAY_OF_MONTH), Utils.TYPE_ALL);
 			return null;
 		}
+		
+		
 
 		@Override
 		protected void onPostExecute(Void result) {
@@ -135,6 +140,8 @@ public class CalendarView extends LinearLayout {
 			mAdapter.setConfig(mConfig);
 			mAdapter.setDays(days);
 			mAdapter.setItems(mSpecialDateItems);
+			
+			mCalendarGrid.setSelector(new ColorDrawable(Color.TRANSPARENT));
 
 			mCalendarGrid.setAdapter(mAdapter);
 
@@ -151,10 +158,14 @@ public class CalendarView extends LinearLayout {
 
 				@SuppressWarnings("deprecation")
 				public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-
-					refreshView();
-					resetAllDayBg();
-
+					
+					mAdapter.setCurrentIndex(position);
+					
+					if(!mConfig.multipleSelect){
+						refreshView();
+						resetAllDayBg();
+					}
+					
 					int dateID = UZResourcesIDFinder.getResIdID("date");
 					daysText = (TextView) v.findViewById(dateID);
 
@@ -164,6 +175,9 @@ public class CalendarView extends LinearLayout {
 					if (daysText instanceof TextView && !daysText.getText().equals("")) {
 						
 						String day = daysText.getText().toString();
+						
+						mAdapter.setCurrentDay(day);
+						
 						if (day.length() == 1) {
 							day = "0" + day;
 						}
@@ -262,6 +276,17 @@ public class CalendarView extends LinearLayout {
 	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
+		
+//		switch(ev.getAction()){
+//		case MotionEvent.ACTION_DOWN:
+//			Log.i("DEBUG", "=== down : " + downY);
+//			break;
+//		case MotionEvent.ACTION_MOVE:
+//			Log.i("DEBUG", "=== move : " + ev.getY());
+//			break;
+//		case MotionEvent.ACTION_UP:
+//			break;
+//		}
 		mDetector.onTouchEvent(ev);
 		return true;
 	}
@@ -361,7 +386,6 @@ public class CalendarView extends LinearLayout {
 			refreshDays();
 			mAdapter.setDays(days);
 			return null;
-
 		}
 
 		@Override
@@ -553,6 +577,7 @@ public class CalendarView extends LinearLayout {
 					&& mSpecialDateItems
 							.contains(new SpecicalDateStyle( android.text.format.DateFormat.format(
 									"yyyy-MM", mCurrentMonth) + "-" + day))) {
+				
 				
 				tmpTxt.setTextColor(mConfig.specialDateColor);
 				

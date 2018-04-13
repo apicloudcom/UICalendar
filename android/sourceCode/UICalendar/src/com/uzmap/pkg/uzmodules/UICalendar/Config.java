@@ -61,11 +61,15 @@ public class Config {
 	public String switchMode = SWITCH_MODE_VERTICAL;
 	public String fixedOn;
 	public boolean fixed = true;
+	
+	public boolean multipleSelect = false;
 
 	private UZWidgetInfo widgetInfo;
 
 	public Config(UZModuleContext uzContext, UZWidgetInfo widgetInfo, Context context) {
 		this.widgetInfo = widgetInfo;
+		
+		multipleSelect = uzContext.optBoolean("multipleSelect");
 		
 		w = UZCoreUtil.pixToDip(Utils.getScreenWidth(context));
 		JSONObject rectObj = uzContext.optJSONObject("rect");

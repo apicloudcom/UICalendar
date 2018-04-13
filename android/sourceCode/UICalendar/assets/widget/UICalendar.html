@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+    <title>title</title>
+    <link rel="stylesheet" type="text/css" href="../css/api.css" />
+    <style>
+        body {
+            padding: 10px;
+            height: 1000px;
+            background-color: #FFF
+        }
+        
+        button {
+            margin: 10px;
+        }
+        
+    </style>
+</head>
+
+<body>
+    <button type="button" onclick="UICalendar1()" name="button">UICalendar1</button>
+    <button type="button" onclick="setSpecialDates()" name="button">setSpecialDates</button>
+    <button type="button" onclick="newRecipeNotice1()" name="button">newRecipeNotice</button>
+</body>
+<script type="text/javascript" src="../script/api.js"></script>
+<script type="text/javascript" src="../script/jq.js"></script>
+<script type="text/javascript">
+    var newRecipeNotice = [];
+    var specialDateList = [];
+    var cancleDate = [];
+
+    function newRecipeNotice1() {
+        newRecipeNotice = ['2017-09-08', '2017-09-10', '2017-09-11', '2017-09-15', '2017-09-17'];
+        for (var i = 0; i < newRecipeNotice.length; i++) {
+            var obj = {};
+            obj.date = newRecipeNotice[i];
+            obj.color = '#000';
+            obj.bg = 'widget://icon/chuqin.png';
+            specialDateList.push(obj);
+        }
+        UICalendar = api.require('UICalendar');
+        UICalendar.open({
+            rect: {
+                x: 0,
+                y: 170,
+                w: api.frameWidth,
+                h: 208
+            },
+            styles: {
+                bg: '#fff',
+                week: {
+                    weekdayColor: '#3d3d3d',
+                    weekendColor: '#3d3d3d',
+                    size: 12
+                },
+                date: {
+                    color: '#3d3d3d',
+                    selectedColor: '#fff',
+                    selectedBg: 'widget://image/click.png',
+                    size: 12
+                },
+                today: {
+                    color: '#fff',
+                    bg: 'widget://image/tday.png'
+                },
+                specialDate: {
+                    color: '#000',
+                    bg: 'widget://image/chuqin.png'
+                }
+            },
+            specialDate: specialDateList,
+            switchMode: 'vertical',
+            fixedOn: api.frameName,
+            fixed: false
+        }, function(ret) {
+        
+        	if(ret.eventType == 'normal'){
+        	
+        		var dateStr = ret.year + '-' + ret.month + '-' + ret.day;
+        		alert(dateStr);
+        		
+        		alert(JSON.stringify(ret));
+        		
+        		var UICalendar = api.require('UICalendar');
+				UICalendar.setDate({
+    				date: dateStr,
+    				ignoreSelected: false
+				}, function(ret, err) {
+				});
+        	}
+        });
+    }
+    
+    function cancleSpecialDay(clickDay) {
+        cancleDate = [];
+        if ($.inArray(clickDay, newRecipeNotice) != -1) {
+            cancleDate.push(clickDay);
+            UICalendar.cancelSpecialDates({
+                specialDates: cancleDate
+            });
+            // newRecipeNotice.remove(clickDay);
+        }
+    }
+
+
+    function setSpecialDates() {
+        //  alert(810);
+        var UICalendar = api.require('UICalendar');
+        UICalendar.setSpecialDates({
+            specialDates: [{
+                date: '2017-08-10',
+                color: '#ff0000',
+                bg: '#333333'
+            }, {
+                date: '2015-12-08',
+                color: '#abckde',
+                bg: '#ff0000'
+            }]
+        });
+    }
+
+    function UICalendar1() {
+        // var UICalendar = api.require('UICalendar');
+        // UICalendar.open({
+        //     rect: {
+        //         x: 0,
+        //         y: 0,
+        //         w: api.frameWidth,
+        //         h: 340
+        //     },
+        //     styles: {
+        //         bg: 'rgba(0,0,0,0)',
+        //         week: {
+        //             weekdayColor: '#3b3b3b',
+        //             weekendColor: '#a8d400',
+        //             size: 12
+        //         },
+        //         date: {
+        //             color: '#3b3b3b',
+        //             selectedColor: '#fff',
+        //             selectedBg: '#a8d500',
+        //             size: 12
+        //         },
+        //         today: {
+        //             color: 'rgb(230,46,37)',
+        //             bg: ''
+        //         },
+        //         specialDate: {
+        //             color: '#a8d500',
+        //             bg: 'widget://image/a.png'
+        //         }
+        //     },
+        //     specialDate: [{
+        //         date: '2015-06-01'
+        //     }],
+        //     switchMode: 'vertical',
+        //     fixedOn: api.frameName,
+        //     fixed: false
+        // }, function(ret, err) {
+        //     if (ret) {
+        //         alert(JSON.stringify(ret));
+        //     } else {
+        //         alert(JSON.stringify(err));
+        //     }
+        // });
+        var UICalendar = api.require('UICalendar');
+        UICalendar.open({
+        	multipleSelect:true,
+            rect: {
+                x: 0,
+                // y: api.frameHeight / 2 - 200,
+                y: 100,
+                w: api.frameWidth,
+                h: 340
+            },
+            styles: {
+                bg: 'rgba(0,0,0,0)',
+                week: {
+                    weekdayColor: '#3b3b3b',
+                    //        weekendColor: '#b3b3b3',
+                    weekendColor: 'rgb(179, 179, 204)',
+                    size: 20
+                },
+                date: { //selected date
+                    color: '#3b3b3b',
+                    selectedColor: '#fff',
+                    selectedBg: '#00ff00',
+                    size: 20
+                },
+                today: {
+                    color: 'rgb(230,46,37)',
+                    bg: ''
+                },
+                specialDate: {
+                    color: '#a8d500',
+                    //bg: 'widget:../image/blank.gif'
+                },
+            },
+            //specialDate: [{
+            //  date: '2016-05-03'
+            //}],
+            switchMode : 'vertical', //change month: vertical, vertical, none
+            fixedOn: api.frameName,
+            fixed: false
+        }, function(ret, err) {
+        
+        	alert(JSON.stringify(ret));
+        
+           /* if(ret.eventType == 'normal'){
+        	
+        		var dateStr = ret.year + '-' + ret.month + '-' + ret.day;
+        		var UICalendar = api.require('UICalendar');
+				UICalendar.setDate({
+    				date: dateStr,
+    				ignoreSelected: true
+				}, function(ret, err) {
+				});
+        	}*/
+        });
+        api.addEventListener({
+            name: 'shake'
+        }, function(ret, err) {
+            setSpecialDates();
+            if (ret) {
+                // alert( JSON.stringify( ret ) );
+            } else {
+                //alert( JSON.stringify( err ) );
+            }
+        });
+
+    };
+    
+    apiready = function() {
+        UICalendar1();
+    }
+    
+</script>
+
+</html>

@@ -104,7 +104,6 @@ public class Utils {
 		}
 
 		return INVALIDATE_VALUE;
-
 	}
 
 }
