@@ -1,0 +1,238 @@
+<!DOCTYPE HTML>
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+            <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0" />
+            <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+                <title>Hello APP</title>
+                <link rel="stylesheet" type="text/css" href="../css/api.css" />
+                <style>
+                    section {
+                        position: relative;
+                        top: 400px;
+                        margin: 8px;
+                        background-color: #fff;
+                    }
+                
+                h2 {
+                    position: relative;
+                    height: 44px;
+                    line-height: 44px;
+                    color: #888;
+                }
+                
+                div {
+                    position: relative;
+                    height: 56px;
+                    margin: 8px;
+                    text-align: center;
+                    font-size: 12px;
+                    line-height: 56px;
+                    color: #fff;
+                    background-color: #354399;
+                    background-clip: padding;
+                    box-shadow: 0 0 1px 1px #ccc;
+                    border-radius: 2px;
+                }
+                
+                .active {
+                    opacity: 0.7;
+                }
+                </style>
+    </head>
+    
+    <body>
+        <section>
+            <h2>UICalendar</h2>
+            <div tapmode="active" onclick="fnopen()">
+                打开日历
+            </div>
+            <div tapmode="active" onclick="fnsetSpecialDates()">
+                设置特殊日期
+            </div>
+            <div tapmode="active" onclick="fncancelSpecialDates()">
+                取消已设置的特殊日期状态
+            </div>
+            <div tapmode="active" onclick="fnclose()">
+                关闭日历
+            </div>
+            <div tapmode="active" onclick="fnshow()">
+                显示日历
+            </div>
+            <div tapmode="active" onclick="fnhide()">
+                隐藏日历
+            </div>
+            <div tapmode="active" onclick="fnnextMonth()">
+                显示下个月
+            </div>
+            <div tapmode="active" onclick="fnprevMonth()">
+                显示上个月
+            </div>
+            <div tapmode="active" onclick="fnnextYear()">
+                显示下一年
+            </div>
+            <div tapmode="active" onclick="fnprevYear()">
+                显示上一年
+            </div>
+            <div tapmode="active" onclick="fnsetDate()">
+                设置选中日期（不支持日期多选模式）
+            </div>
+            <div tapmode="active" onclick="fnturnPage()">
+                翻到指定的页
+            </div>
+        </section>
+    </body>
+    <script type="text/javascript" src="../script/api.js"></script>
+    <script type="text/javascript">
+        function fnopen() {
+            var UICalendar = api.require('UICalendar');
+            UICalendar.open({
+                            rect: {
+                            x: 30,
+                            y: api.frameHeight / 2 - 170,
+                            w: api.frameWidth - 60,
+                            h: 340
+                            },
+                            styles: {
+                            bg: 'rgba(0,0,0,0)',
+                            week: {
+                            weekdayColor: '#3b3b3b',
+                            weekendColor: '#a8d400',
+                            size: 12
+                            },
+                            date: {
+                            color: '#3b3b3b',
+                            selectedColor: '#fff',
+                            selectedBg: '#a8d500',
+                            size: 12
+                            },
+                            today: {
+                            color: 'rgb(230,46,37)',
+                            bg: ''
+                            },
+                            specialDate: {
+                            color: '#a8d500',
+                            bg: 'widget://image/a.png'
+                            }
+                            },
+                            specialDate: [{
+                                          date: '2018-04-01'
+                                          }],
+                            switchMode: 'vertical',
+                            fixedOn: api.frameName,
+                            fixed: false
+                            }, function(ret, err) {
+                            if (ret) {
+                            alert(JSON.stringify(ret));
+                            } else {
+                            alert(JSON.stringify(err));
+                            }
+                            });
+                            
+        }
+    
+    function fnsetSpecialDates() {
+        var UICalendar = api.require('UICalendar');
+        UICalendar.setSpecialDates({
+                                   specialDates: [{
+                                                  date: '2018-4-07',
+                                                  color: '#abckde',
+                                                  bg: '#ff0000'
+                                                  }, {
+                                                  date: '2018-4-08',
+                                                  color: '#abckde',
+                                                  bg: '#ff0000'
+                                                  }]
+                                   });
+    }
+    
+    function fncancelSpecialDates() {
+        var UICalendar = api.require('UICalendar');
+        UICalendar.cancelSpecialDates({
+                                      specialDates: ['2018-4-08', '2018-4-07']
+                                      });
+    }
+    
+    function fnclose() {
+        var UICalendar = api.require('UICalendar');
+        UICalendar.close();
+    }
+    
+    function fnshow() {
+        var UICalendar = api.require('UICalendar');
+        UICalendar.show();
+    }
+    
+    function fnhide() {
+        var UICalendar = api.require('UICalendar');
+        UICalendar.hide();
+    }
+    
+    function fnnextMonth() {
+        var UICalendar = api.require('UICalendar');
+        UICalendar.nextMonth(function(ret, err) {
+                             if (ret) {
+                             alert(JSON.stringify(ret));
+                             } else {
+                             alert(JSON.stringify(err));
+                             }
+                             });
+    }
+    
+    function fnprevMonth() {
+        var UICalendar = api.require('UICalendar');
+        UICalendar.prevMonth(function(ret, err) {
+                             if (ret) {
+                             alert(JSON.stringify(ret));
+                             } else {
+                             alert(JSON.stringify(err));
+                             }
+                             });
+    }
+    function fnprevMonth() {
+    }
+    function fnnextYear() {
+        var UICalendar = api.require('UICalendar');
+        UICalendar.nextYear(function(ret, err) {
+                            if (ret) {
+                            alert(JSON.stringify(ret));
+                            } else {
+                            alert(JSON.stringify(err));
+                            }
+                            });
+    }
+    function fnprevYear() {
+        var UICalendar = api.require('UICalendar');
+        UICalendar.prevYear(function(ret, err) {
+                            if (ret) {
+                            alert(JSON.stringify(ret));
+                            } else {
+                            alert(JSON.stringify(err));
+                            }
+                            });
+    }
+    function fnsetDate() {
+        var UICalendar = api.require('UICalendar');
+        UICalendar.setDate({
+                           date: '2018-4-08',
+                           ignoreSelected: false
+                           }, function(ret, err) {
+                           if (ret.status) {
+                           alert(JSON.stringify(ret));
+                           } else {
+                           alert(JSON.stringify(err));
+                           }
+                           });
+    }
+    function fnturnPage() {
+        var UICalendar = api.require('UICalendar');
+        UICalendar.turnPage({
+                            date: '2018-04'
+                            });
+    }
+    
+        </script>
+    
+</html>
+

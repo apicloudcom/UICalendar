@@ -27,6 +27,7 @@ import android.os.Handler;
 import android.text.TextUtils;
 import android.text.format.DateFormat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -35,7 +36,9 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.uzmap.pkg.uzcore.UZResourcesIDFinder;
 import com.uzmap.pkg.uzcore.uzmodule.UZModuleContext;
@@ -52,6 +55,7 @@ public class CalendarView extends LinearLayout {
 	public ArrayList<SpecicalDateStyle> mSpecialDateItems;
 
 	public Context mContext;
+	private int viewId = 0;
 
 	/**
 	 * represent the current calendar grid
@@ -72,6 +76,9 @@ public class CalendarView extends LinearLayout {
 	private static final String EVENT_TYPE_SWITCH = "switch";
 	private static final String EVENT_TYPE_SPECIAL = "special";
 	private static final String EVENT_TYPE_NORMAL = "normal";
+	
+	private static final String EVENT_TYPE_CANCEL_SPECIAL = "cancelSpecial";
+	private static final String EVENT_TYPE_CANCEL_NORMAL = "cancelNormal";
 
 	public CalendarView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -120,7 +127,7 @@ public class CalendarView extends LinearLayout {
 			Utils.callback(uzContext, EVENT_TYPE_SHOW,
 					mCurrentMonth.get(Calendar.YEAR),
 					mCurrentMonth.get(Calendar.MONTH),
-					todayCalendar.get(Calendar.DAY_OF_MONTH), Utils.TYPE_ALL);
+					todayCalendar.get(Calendar.DAY_OF_MONTH), Utils.TYPE_ALL,viewId);
 			return null;
 		}
 		
@@ -131,7 +138,7 @@ public class CalendarView extends LinearLayout {
 
 			int gridviewID = UZResourcesIDFinder.getResIdID("gridview");
 			mCalendarGrid = (GridView) findViewById(gridviewID);
-
+			
 			int lldateID = UZResourcesIDFinder.getResIdID("ll_date");
 			LinearLayout linearLayout = (LinearLayout) findViewById(lldateID);
 
@@ -153,50 +160,163 @@ public class CalendarView extends LinearLayout {
 					return false;
 				}
 			});
-
+			
+			final ArrayList<String> selectedDays = new ArrayList<String>();
 			mCalendarGrid.setOnItemClickListener(new OnItemClickListener() {
 
-				@SuppressWarnings("deprecation")
+				@SuppressLint("DefaultLocale") @SuppressWarnings("deprecation")
 				public void onItemClick(AdapterView<?> parent, View v, int position, long id) {
-					
-					mAdapter.setCurrentIndex(position);
-					
-					if(!mConfig.multipleSelect){
-						refreshView();
-						resetAllDayBg();
-					}
 					
 					int dateID = UZResourcesIDFinder.getResIdID("date");
 					daysText = (TextView) v.findViewById(dateID);
 
 					int backImgId = UZResourcesIDFinder.getResIdID("backImg");
 					ImageView backImg = (ImageView) v.findViewById(backImgId);
+					
+					String day = daysText.getText().toString();
+					
+					if (!canClick(day)) {
+						return;
+					};
+					
+					mAdapter.setCurrentIndex(position);
+					if(!mConfig.multipleSelect){
+						refreshView();
+						resetAllDayBg();
+					}
+					
+					// 
+					String today = String.format("%d-%d-%d", mCurrentMonth.get(Calendar.YEAR), mCurrentMonth.get(Calendar.MONTH) + 1, Integer.parseInt(day));
+					if(mConfig.multipleSelect && /*selectedDays.contains(today)*/selectedDays.contains(day)){	
+						Log.i("debug", "contains");
+						
+						/// =================================================>
 
+						daysText.setTextColor(mConfig.dateColor);
+						daysText.setBackgroundDrawable(null);
+
+						backImg.setImageBitmap(null);
+
+						if (!TextUtils.isEmpty(daysText.getText())) {
+							if (mCurrentMonth.get(Calendar.YEAR) == todayCalendar.get(Calendar.YEAR)&& 
+									mCurrentMonth.get(Calendar.MONTH) == todayCalendar.get(Calendar.MONTH)&& 
+									Integer.parseInt(daysText.getText().toString()) == todayCalendar.get(Calendar.DAY_OF_MONTH) && mConfig.showTodayStyle) {
+								daysText.setTextColor(mConfig.todayColor);
+								if (mConfig.todayBitmap != null) {
+									backImg.setImageBitmap(mConfig.todayBitmap);
+									daysText.setBackgroundDrawable(null);
+								} else {
+									daysText.setBackgroundColor(mConfig.todayBg);
+								}
+							}
+						}
+						
+						String day1 = daysText.getText().toString();
+						if (day1.length() == 1) {
+							day1 = "0" + day1;
+						}
+
+						if (day1.length() > 0
+								&& mSpecialDateItems != null
+								&& mSpecialDateItems
+										.contains(new SpecicalDateStyle( android.text.format.DateFormat.format(
+												"yyyy-MM", mCurrentMonth) + "-" + day1))) {
+							
+							
+							daysText.setTextColor(mConfig.specialDateColor);
+							
+							if (mConfig.specialDateBgBitmap != null) {
+								backImg.setImageBitmap(mConfig.specialDateBgBitmap);
+								daysText.setBackgroundDrawable(null);
+							} else {
+								daysText.setBackgroundColor(mConfig.specialDateBg);
+							}
+							daysText.setTextColor(mConfig.specialDateColor);
+							
+							String curDateStr = android.text.format.DateFormat.format(
+									"yyyy-MM", mCurrentMonth) + "-" + day1;
+							SpecicalDateStyle curSpecialDate = getCurrentSpecialDate(
+									curDateStr, mSpecialDateItems);
+							
+							if (curSpecialDate != null && curSpecialDate.hasBg) {
+								if (curSpecialDate.bg != null) {
+
+									backImg.setImageBitmap(curSpecialDate.bg);
+									daysText.setBackgroundDrawable(null);
+
+								} else {
+									daysText.setBackgroundColor(curSpecialDate.bgColor);
+								}
+							}
+
+							if (curSpecialDate != null && curSpecialDate.hasTextColor) {
+								daysText.setTextColor(curSpecialDate.color);
+							}
+							
+							Utils.callback(uzContext, EVENT_TYPE_CANCEL_SPECIAL,
+									mCurrentMonth.get(Calendar.YEAR),
+									mCurrentMonth.get(Calendar.MONTH),
+									Integer.parseInt(day), Utils.TYPE_ALL,viewId);
+						} else {
+							Utils.callback(uzContext, EVENT_TYPE_CANCEL_NORMAL,
+									mCurrentMonth.get(Calendar.YEAR),
+									mCurrentMonth.get(Calendar.MONTH),
+									Integer.parseInt(day), Utils.TYPE_ALL,viewId);
+						}
+						
+						mCurrentMonth.set(Calendar.DAY_OF_MONTH, Integer.parseInt(day));
+						if(mCurrentMonth.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY || mCurrentMonth.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
+							daysText.setTextColor(mConfig.weekendColor);
+				        }
+						
+						selectedDays.remove(day);
+//						selectedDays.remove(today);
+						mAdapter.removeCurrentDay(day);
+						return;
+					
+						/// =================================================>
+						
+					}
+					
+					
 					if (daysText instanceof TextView && !daysText.getText().equals("")) {
+						Log.i("asher day -- ", day);
+						if (mConfig.multipleSelect) {
+							
+							mAdapter.changeCurrentDay(day);
+						}else{
+							mAdapter.oneCurrentDay(day);
+							mAdapter.setCurrentYear(mCurrentMonth.get(Calendar.YEAR));
+							mAdapter.setCurrentMonth(mCurrentMonth.get(Calendar.MONTH));
+						}
 						
-						String day = daysText.getText().toString();
-						
-						mAdapter.setCurrentDay(day);
+						if(mConfig.multipleSelect){
+							selectedDays.add(day);
+//							selectedDays.add(today);
+						}
 						
 						if (day.length() == 1) {
 							day = "0" + day;
 						}
 						
+						// do unselected
+						
+						// do unselected
+						
 						currentIndex = position;
 						
 						if (day.length() > 0
 								&& mSpecialDateItems != null
-								&& mSpecialDateItems
-										.contains( new SpecicalDateStyle(DateFormat.format("yyyy-MM",mCurrentMonth)+ "-" + day)  )) {
+								&& mSpecialDateItems.contains( new SpecicalDateStyle(DateFormat.format("yyyy-MM",mCurrentMonth)+ "-" + day))) {
 							Utils.callback(uzContext, EVENT_TYPE_SPECIAL,
 									mCurrentMonth.get(Calendar.YEAR),
 									mCurrentMonth.get(Calendar.MONTH),
-									Integer.parseInt(day), Utils.TYPE_ALL);
+									Integer.parseInt(day), Utils.TYPE_ALL,viewId);
 						} else {
 							Utils.callback(uzContext, EVENT_TYPE_NORMAL,
 									mCurrentMonth.get(Calendar.YEAR),
 									mCurrentMonth.get(Calendar.MONTH),
-									Integer.parseInt(day), Utils.TYPE_ALL);
+									Integer.parseInt(day), Utils.TYPE_ALL,viewId);
 						}
 
 						if (mConfig.dateSelectedBitmap != null) {
@@ -206,13 +326,15 @@ public class CalendarView extends LinearLayout {
 							daysText.setBackgroundColor(mConfig.dateSelectedBg);
 						}
 						daysText.setTextColor(mConfig.dateSelectedColor);
+						
 					}
 				}
-
 			});
 		}
 
 	}
+	
+	
 
 	private TextView daysText;
 	private String[] days;
@@ -258,22 +380,30 @@ public class CalendarView extends LinearLayout {
 		}
 	}
 
+	
 	private Config mConfig;
 	private UZModuleContext moduleContext;
+	
+	
 
-	public void init(UZModuleContext moduleContext,
-			ArrayList<SpecicalDateStyle> items, int height, Config config) {
+	public int getViewId() {
+		return viewId;
+	}
+
+	public void setViewId(int id) {
+		this.viewId = id;
+	}
+
+	public void init(UZModuleContext moduleContext,ArrayList<SpecicalDateStyle> items, int height, Config config) {
 		mDetector = new GestureDetector(getContext(), new MyGestureListener());
 		this.mSpecialDateItems = items;
 		this.mHeight = height;
 		this.mConfig = config;
 		new InitTask(moduleContext).execute();
-		
 		this.moduleContext = moduleContext;
 		
 	}
 
-	@SuppressLint("ClickableViewAccessibility")
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
 		
@@ -287,8 +417,15 @@ public class CalendarView extends LinearLayout {
 //		case MotionEvent.ACTION_UP:
 //			break;
 //		}
-		mDetector.onTouchEvent(ev);
-		return true;
+		
+		if(Config.SWITCH_MODE_NONE.equals(mConfig.switchMode.trim())){
+			return super.onTouchEvent(ev);
+		} else {
+			 // === debug ===
+			  mDetector.onTouchEvent(ev);
+			  return true;
+			 // === debug ===
+		}
 	}
 
 	public class MyGestureListener extends
@@ -398,7 +535,7 @@ public class CalendarView extends LinearLayout {
 						mCurrentMonth.get(Calendar.YEAR),
 						mCurrentMonth.get(Calendar.MONTH),
 						mCurrentMonth.get(Calendar.DAY_OF_MONTH),
-						Utils.TYPE_MONTH);
+						Utils.TYPE_MONTH,viewId);
 			}
 
 			if (cbType == Utils.TYPE_SWITCH) {
@@ -406,7 +543,7 @@ public class CalendarView extends LinearLayout {
 						mCurrentMonth.get(Calendar.YEAR),
 						mCurrentMonth.get(Calendar.MONTH),
 						mCurrentMonth.get(Calendar.DAY_OF_MONTH),
-						Utils.TYPE_SWITCH);
+						Utils.TYPE_SWITCH,viewId);
 			}
 
 		}
@@ -425,7 +562,7 @@ public class CalendarView extends LinearLayout {
 
 		if (uzContext != null) {
 			Utils.callback(uzContext, "", mCurrentMonth.get(Calendar.YEAR),
-					mCurrentMonth.get(Calendar.MONTH), 0, Utils.TYPE_MONTH);
+					mCurrentMonth.get(Calendar.MONTH), 0, Utils.TYPE_MONTH,viewId);
 		}
 		
 	}
@@ -442,7 +579,7 @@ public class CalendarView extends LinearLayout {
 
 		if (uzContext != null) {
 			Utils.callback(uzContext, "", mCurrentMonth.get(Calendar.YEAR),
-					mCurrentMonth.get(Calendar.MONTH), 0, Utils.TYPE_MONTH);
+					mCurrentMonth.get(Calendar.MONTH), 0, Utils.TYPE_MONTH,viewId);
 		}
 
 	}
@@ -485,7 +622,7 @@ public class CalendarView extends LinearLayout {
 						mCurrentMonth.get(Calendar.YEAR),
 						mCurrentMonth.get(Calendar.MONTH),
 						mCurrentMonth.get(Calendar.DAY_OF_MONTH),
-						Utils.TYPE_MONTH);
+						Utils.TYPE_MONTH,viewId);
 			}
 			
 			if (cbType == Utils.TYPE_SWITCH) {
@@ -493,7 +630,7 @@ public class CalendarView extends LinearLayout {
 						mCurrentMonth.get(Calendar.YEAR),
 						mCurrentMonth.get(Calendar.MONTH),
 						mCurrentMonth.get(Calendar.DAY_OF_MONTH),
-						Utils.TYPE_SWITCH);
+						Utils.TYPE_SWITCH,viewId);
 			}
 
 		}
@@ -509,15 +646,8 @@ public class CalendarView extends LinearLayout {
 			}
 			View view = mCalendarGrid.getChildAt(currentIndex);
 			if (view != null) {
-				if (date.length() > 0
-						&& mSpecialDateItems != null
-						&& mSpecialDateItems
-								.contains(android.text.format.DateFormat
-										.format("yyyy-MM", mCurrentMonth)
-										+ "-"
-										+ date)) {
-					daysText.setBackgroundDrawable(new BitmapDrawable(
-							mSpecialBgBmp));
+				if (date.length() > 0&& mSpecialDateItems != null&& mSpecialDateItems.contains(android.text.format.DateFormat.format("yyyy-MM", mCurrentMonth)+ "-"+ date)) {
+					daysText.setBackgroundDrawable(new BitmapDrawable(mSpecialBgBmp));
 				} else {
 					daysText.setBackgroundDrawable(null);
 				}
@@ -528,7 +658,7 @@ public class CalendarView extends LinearLayout {
 	private Calendar todayCalendar = Calendar.getInstance();
 
 	@SuppressWarnings("deprecation")
-	private void resetAllDayBg() {
+	public void resetAllDayBg() {
 		for (int i = 0; i < mCalendarGrid.getChildCount(); i++) {
 			int textId = UZResourcesIDFinder.getResIdID("date");
 			TextView tmpTxt = (TextView) (mCalendarGrid.getChildAt(i)
@@ -538,8 +668,7 @@ public class CalendarView extends LinearLayout {
 			tmpTxt.setBackgroundDrawable(null);
 
 			int backImgId = UZResourcesIDFinder.getResIdID("backImg");
-			ImageView backImg = (ImageView) (mCalendarGrid.getChildAt(i)
-					.findViewById(backImgId));
+			ImageView backImg = (ImageView) (mCalendarGrid.getChildAt(i).findViewById(backImgId));
 			backImg.setImageBitmap(null);
 
 			if (i % 7 == 0) {
@@ -556,7 +685,7 @@ public class CalendarView extends LinearLayout {
 						&& mCurrentMonth.get(Calendar.MONTH) == todayCalendar
 								.get(Calendar.MONTH)
 						&& Integer.parseInt(tmpTxt.getText().toString()) == todayCalendar
-								.get(Calendar.DAY_OF_MONTH)) {
+								.get(Calendar.DAY_OF_MONTH) && mConfig.showTodayStyle) {
 					tmpTxt.setTextColor(mConfig.todayColor);
 					if (mConfig.todayBitmap != null) {
 						backImg.setImageBitmap(mConfig.todayBitmap);
@@ -611,7 +740,9 @@ public class CalendarView extends LinearLayout {
 				if (curSpecialDate != null && curSpecialDate.hasTextColor) {
 					tmpTxt.setTextColor(curSpecialDate.color);
 				}
-				
+			}
+			if (!TextUtils.isEmpty(tmpTxt.getText().toString().trim()) && !canClick(tmpTxt.getText().toString().trim())) {
+				tmpTxt.setTextColor(Color.GRAY);
 			}
 		}
 	}
@@ -646,6 +777,7 @@ public class CalendarView extends LinearLayout {
 			return;
 		}
 		
+		
 		if (isNumeric(timeArr[0]) && isNumeric(timeArr[1])
 				&& isNumeric(timeArr[2])) {
 			mCurrentMonth.set(Integer.parseInt(timeArr[0]),
@@ -653,6 +785,20 @@ public class CalendarView extends LinearLayout {
 			refreshDays();
 			mAdapter.setDays(days);
 			mAdapter.notifyDataSetChanged();
+			
+			if (mConfig.multipleSelect) {
+				
+				mAdapter.changeCurrentDay(timeArr[2]);
+			}else{
+				mAdapter.oneCurrentDay(timeArr[2]);
+				mAdapter.setCurrentYear(mCurrentMonth.get(Calendar.YEAR));
+				mAdapter.setCurrentMonth(mCurrentMonth.get(Calendar.MONTH));
+			}
+			
+//			if(mConfig.multipleSelect){
+//				selectedDays.add(day);
+////				selectedDays.add(today);
+//			}
 		}
 		
 		new Handler().postDelayed(new Runnable() {
@@ -690,7 +836,7 @@ public class CalendarView extends LinearLayout {
 											.get(Calendar.MONTH)
 									&& Integer.parseInt(tmpTxt.getText()
 											.toString()) == todayCalendar
-											.get(Calendar.DAY_OF_MONTH)) {
+											.get(Calendar.DAY_OF_MONTH) && mConfig.showTodayStyle) {
 
 								tmpTxt.setTextColor(mConfig.todayColor);
 								if (mConfig.todayBitmap != null) {
@@ -753,7 +899,13 @@ public class CalendarView extends LinearLayout {
 							tmpTxt.setTextColor(mConfig.dateSelectedColor);
 
 						}
+						//不可点击
+						if (!TextUtils.isEmpty(day.trim()) && !canClick(day)) {
+							tmpTxt.setClickable(false);
+							tmpTxt.setTextColor(Color.GRAY);
+						}
 					}
+					
 				}
 
 				JSONObject ret = new JSONObject();
@@ -820,5 +972,44 @@ public class CalendarView extends LinearLayout {
 		}
 		
 	}
-	
+	//是否可点击
+	private boolean canClick(String day) {
+		if (TextUtils.isEmpty(day)) {
+			return false;
+		}
+		Calendar nowCalendar = Calendar.getInstance();
+		nowCalendar.set(mCurrentMonth.get(Calendar.YEAR), mCurrentMonth.get(Calendar.MONTH), Integer.parseInt(day));
+		//后面月份以后不可点击，并刷新背景
+//		if (!mConfig.isAfterChose() && todayCalendar.before(nowCalendar)) {
+////			refreshView();
+////			resetAllDayBg();
+//			return false;
+//		}
+//		//前面月份不可点击，并刷新背景
+//		if (!mConfig.isBeforeChose() && todayCalendar.after(nowCalendar)) {
+////			refreshView();
+////			resetAllDayBg();
+//			return false;
+//		}
+		//当月，当前以前不可点击
+		if (todayCalendar.get(Calendar.YEAR) == nowCalendar.get(Calendar.YEAR) && todayCalendar.get(Calendar.MONTH) == nowCalendar.get(Calendar.MONTH)) {
+			//当月大于当天不可选
+			if (!mConfig.isAfterChose() && Integer.parseInt(day)>todayCalendar.get(Calendar.DAY_OF_MONTH)) {
+				return false;
+			}
+			//当月小于当天不可选
+			if (!mConfig.isBeforeChose() && Integer.parseInt(day)<todayCalendar.get(Calendar.DAY_OF_MONTH)) {
+				return false;
+			}
+		}else{
+			if (!mConfig.isAfterChose() && todayCalendar.before(nowCalendar)) {
+				return false;
+			}
+			//当月小于当天不可选
+			if (!mConfig.isBeforeChose() && todayCalendar.after(nowCalendar)) {
+				return false;
+			}
+		}
+		return true;
+	}
 }

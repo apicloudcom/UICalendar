@@ -1,0 +1,50 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="maximum-scale=1.0,minimum-scale=1.0,user-scalable=0,width=device-width,initial-scale=1.0"/>
+    <meta name="format-detection" content="telephone=no,email=no,date=no,address=no">
+    <title>Hello APP</title>
+    <link rel="stylesheet" type="text/css" href="./css/api.css" />
+    <link rel="stylesheet" type="text/css" href="./css/common.css" />
+</head>
+<body>
+    <div id="wrap">
+        <div id="header">
+            <h1>APICloud</h1>
+        </div>
+        <div id="main">
+
+        </div>
+        <div id="footer">
+            <h5>Copyright &copy;2015 </h5>
+        </div>
+    </div>
+</body>
+<script type="text/javascript" src="./script/api.js"></script>
+<script type="text/javascript">
+
+    apiready = function(){
+		console.log("Hello APICloud");
+
+        var header = $api.byId('header');
+        $api.fixStatusBar(header);
+        var headerPos = $api.offset(header);
+        var main = $api.byId('main');
+        var mainPos = $api.offset(main);
+        api.openFrame({
+            name: 'main',
+            url: 'html/main.html',
+            bounces: false,
+<!--        scrollEnabled:false,-->
+            rect: {
+                x: 0,
+                y: headerPos.h,
+                w: headerPos.w,
+<!--                h: mainPos.h,-->
+                      h:'auto',
+            }
+        });
+    };
+</script>
+</html>

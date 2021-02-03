@@ -16,6 +16,15 @@
 @property (nonatomic, weak) id<SACalendarDelegate> delegate;
 @property (nonatomic, strong) NSDictionary *styles;
 @property (nonatomic, strong) NSNumber *selectedDay;
+@property (nonatomic, assign) BOOL isBefore;
+@property (nonatomic, assign) BOOL isAfter;
+@property (nonatomic, assign) BOOL showTodayStyle;
+@property (nonatomic, assign) NSInteger index;
+
+@property (nonatomic, assign)int s_year;
+@property (nonatomic, assign)int s_month;
+@property (nonatomic, assign)int s_day;
+@property (nonatomic,strong) NSMutableArray * selectArray;
 /**
  *  Default constructor. Calendar will begin at current month
  *
@@ -101,6 +110,6 @@
 
 - (NSString *)getPath:(NSString *)path;
 
-- (void)callBack:(NSDictionary *)date isShow:(BOOL)isShow;
+- (void)callBack:(NSDictionary *)date isShow:(BOOL)isShow index:(NSInteger)index;
 
 @end

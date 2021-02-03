@@ -16,12 +16,16 @@
 
 package com.uzmap.pkg.uzmodules.UICalendar;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+
 import com.uzmap.pkg.uzcore.UZResourcesIDFinder;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.graphics.Color;
 
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -86,7 +90,6 @@ public class GridAdapter extends BaseAdapter {
 
 		initView(linearLayout);
 		this.mSpecialDates = new ArrayList<SpecicalDateStyle>();
-
 	}
 
 	private void initView(LinearLayout linearLayout) {
@@ -113,6 +116,7 @@ public class GridAdapter extends BaseAdapter {
 		tv_sat = (TextView) linearLayout.findViewById(tv_satID);
 
 	}
+	
 
 	public void setItems(ArrayList<SpecicalDateStyle> items) {
 		if (items == null) {
@@ -210,9 +214,10 @@ public class GridAdapter extends BaseAdapter {
 		if (position % 7 == 6) {
 			viewHold.tv_day.setTextColor(mConfig.weekendColor);
 		}
-
+		
 		// Today
-		if (mMonth.get(Calendar.YEAR) == mSelectedDate.get(Calendar.YEAR) && mMonth.get(Calendar.MONTH) == mSelectedDate.get(Calendar.MONTH) && days[position].equals("" + mSelectedDate.get(Calendar.DAY_OF_MONTH))) {
+		if (mMonth.get(Calendar.YEAR) == mSelectedDate.get(Calendar.YEAR) && mMonth.get(Calendar.MONTH) == mSelectedDate.get(Calendar.MONTH)
+				&& days[position].equals("" + mSelectedDate.get(Calendar.DAY_OF_MONTH)) && mConfig.showTodayStyle) {
 			if (mConfig.todayBitmap != null) {
 				viewHold.backImg.setImageBitmap(mConfig.todayBitmap);
 				viewHold.tv_day.setBackgroundDrawable(null);
@@ -221,7 +226,7 @@ public class GridAdapter extends BaseAdapter {
 			}
 			viewHold.tv_day.setTextColor(mConfig.todayColor);
 		}
-
+		
 		// Other Special Day
 		if (date.length() > 0 && mSpecialDates != null && mSpecialDates.contains(new SpecicalDateStyle(android.text.format.DateFormat.format("yyyy-MM", mMonth) + "-" + date))) {
 
@@ -265,28 +270,81 @@ public class GridAdapter extends BaseAdapter {
 		// viewHold.tv_day.setTextColor(mConfig.dateSelectedColor);
 		// }
 
-		if (!TextUtils.isEmpty(mCurrentText) && mCurrentText.equals(viewHold.tv_day.getText())) {
-			if (mConfig.dateSelectedBitmap != null) {
-				viewHold.backImg.setImageBitmap(mConfig.dateSelectedBitmap);
-				viewHold.tv_day.setBackgroundDrawable(null);
-			} else {
-				viewHold.tv_day.setBackgroundColor(mConfig.dateSelectedBg);
+		for (int i = 0; i < mCurrentList.size(); i++) {
+			String current = mCurrentList.get(i);
+			
+			//单选判断年月
+			if (currentYear != -1 && currentMonth != -1) {
+				if (mMonth.get(Calendar.YEAR)!=currentYear || mMonth.get(Calendar.MONTH) != currentMonth) {
+					continue;
+				}
 			}
-			viewHold.tv_day.setTextColor(mConfig.dateSelectedColor);
+			
+			if (!TextUtils.isEmpty(current) && current.equals(viewHold.tv_day.getText())) {
+				if (mConfig.dateSelectedBitmap != null) {
+					viewHold.backImg.setImageBitmap(mConfig.dateSelectedBitmap);
+					viewHold.tv_day.setBackgroundDrawable(null);
+				} else {
+					viewHold.tv_day.setBackgroundColor(mConfig.dateSelectedBg);
+				}
+				viewHold.tv_day.setTextColor(mConfig.dateSelectedColor);
+			}
+		}
+		
+		//不可点击
+		if (!TextUtils.isEmpty(days[position].trim()) && !canClick(days[position])) {
+			viewHold.tv_day.setClickable(false);
+			viewHold.tv_day.setTextColor(Color.GRAY);
 		}
 
 		return view;
 	}
 
 	public int mCurrentIndex = -1;
-	public String mCurrentText = "";
+	public List<String> mCurrentList = new ArrayList<String>();
+	public int currentYear = -1;
+	public int currentMonth = -1;
+	
+	public void setCurrentYear(int year){
+		this.currentYear = year;
+	}
+	
+	public void setCurrentMonth(int month){
+		this.currentMonth = month;
+	}
 
 	public void setCurrentIndex(int curIndex) {
 		this.mCurrentIndex = curIndex;
 	}
 
-	public void setCurrentDay(String curDay) {
-		mCurrentText = curDay;
+	//添加选中日期
+	public void addCurrentDay(String curDay){
+		if (mCurrentList.contains(curDay)) {
+			return;
+		}
+		mCurrentList.add(curDay);
+	}
+	public void removeCurrentDay(String delDay){
+		for (int i = 0; i < mCurrentList.size(); i++) {
+			if (TextUtils.equals(delDay, mCurrentList.get(i))) {
+				mCurrentList.remove(i);
+			}
+		}
+	}
+	
+	public void changeCurrentDay(String day){
+		for (int i = 0; i < mCurrentList.size(); i++) {
+			if (TextUtils.equals(day, mCurrentList.get(i))) {
+				mCurrentList.remove(i);
+				return;
+			}
+		}
+		mCurrentList.add(day);
+	}
+	
+	public void oneCurrentDay(String day){
+		mCurrentList.clear();
+		mCurrentList.add(day);
 	}
 
 	public Calendar getMonth() {
@@ -329,5 +387,44 @@ public class GridAdapter extends BaseAdapter {
 
 		return null;
 	}
+	
+	//是否可点击
+		private boolean canClick(String day) {
+			Calendar nowCalendar = Calendar.getInstance();
+			
+			nowCalendar.set(mMonth.get(Calendar.YEAR), mMonth.get(Calendar.MONTH), Integer.parseInt(day));
+			//后面月份以后不可点击，并刷新背景
+//			if (!mConfig.isAfterChose() && mSelectedDate.before(nowCalendar)) {
+////				refreshView();
+////				resetAllDayBg();
+//				return false;
+//			}
+//			//前面月份不可点击，并刷新背景
+//			if (!mConfig.isBeforeChose() && mSelectedDate.after(nowCalendar)) {
+////				refreshView();
+////				resetAllDayBg();
+//				return false;
+//			}
+//			当月，当前以前不可点击
+			if (mSelectedDate.get(Calendar.YEAR) == nowCalendar.get(Calendar.YEAR) && mSelectedDate.get(Calendar.MONTH) == nowCalendar.get(Calendar.MONTH)) {
+				//当月大于当天不可选
+				if (!mConfig.isAfterChose() && Integer.parseInt(day)>mSelectedDate.get(Calendar.DAY_OF_MONTH)) {
+					return false;
+				}
+				//当月小于当天不可选
+				if (!mConfig.isBeforeChose() && Integer.parseInt(day)<mSelectedDate.get(Calendar.DAY_OF_MONTH)) {
+					return false;
+				}
+			}else{
+				if (!mConfig.isAfterChose() && mSelectedDate.before(nowCalendar)) {
+					return false;
+				}
+				//当月小于当天不可选
+				if (!mConfig.isBeforeChose() && mSelectedDate.after(nowCalendar)) {
+					return false;
+				}
+			}
+			return true;
+		}
 
 }

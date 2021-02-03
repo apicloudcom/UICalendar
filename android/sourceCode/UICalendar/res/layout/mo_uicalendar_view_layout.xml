@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.uzmap.pkg.uzmodules.UICalendar.CalendarView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
     android:id="@+id/calendarView"
     android:orientation="vertical" 
     >
@@ -84,7 +84,8 @@
             android:text="六"
              />
     </LinearLayout>
-     <GridView
+    
+     <com.uzmap.pkg.uzmodules.UICalendar.CustomGridView
          android:id="@+id/gridview"
          android:layout_width="match_parent"
          android:layout_height="match_parent"

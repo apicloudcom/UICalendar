@@ -18,6 +18,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.text.TextUtils;
+import android.util.Log;
 
 import com.uzmap.pkg.uzcore.UZCoreUtil;
 import com.uzmap.pkg.uzcore.uzmodule.UZModuleContext;
@@ -65,13 +66,25 @@ public class Config {
 	public boolean multipleSelect = false;
 
 	private UZWidgetInfo widgetInfo;
-
+	
+	//当前日期以前不可选，
+	private boolean beforeChose = true;
+	
+	//当前日期以后不可选
+	private boolean afterChose = true;
+	
+//	当天日期显示特殊格式
+	public boolean showTodayStyle = true;
+	
 	public Config(UZModuleContext uzContext, UZWidgetInfo widgetInfo, Context context) {
 		this.widgetInfo = widgetInfo;
 		
 		multipleSelect = uzContext.optBoolean("multipleSelect");
 		
 		w = UZCoreUtil.pixToDip(Utils.getScreenWidth(context));
+		beforeChose = !uzContext.optBoolean("isBefore",false);
+		afterChose = !uzContext.optBoolean("isAfter",false);
+		showTodayStyle = uzContext.optBoolean("showTodayStyle",true);
 		JSONObject rectObj = uzContext.optJSONObject("rect");
 		if (rectObj != null) {
 			if (!rectObj.isNull("x")) {
@@ -235,6 +248,32 @@ public class Config {
 
 	}
 	
+	
+	
+	public boolean isBeforeChose() {
+		return beforeChose;
+	}
+
+
+
+	public void setBeforeChose(boolean beforeChose) {
+		this.beforeChose = beforeChose;
+	}
+
+
+
+	public boolean isAfterChose() {
+		return afterChose;
+	}
+
+
+
+	public void setAfterChose(boolean afterChose) {
+		this.afterChose = afterChose;
+	}
+
+
+
 	public Bitmap getBitmap(String path) {
 		
 		if (TextUtils.isEmpty(path)) {

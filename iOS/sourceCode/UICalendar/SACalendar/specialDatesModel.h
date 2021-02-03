@@ -11,8 +11,13 @@
 @interface specialDatesModel : NSObject
 
 @property (strong, nonatomic) dateModel *spDateDate;
-@property (strong, nonatomic) NSString *spDateColor;
-@property (strong, nonatomic) NSString *spDateBg;
+@property (copy, nonatomic) NSString *spDateColor;
+@property (copy, nonatomic) NSString *spDateBg;
+
+
+
+
+
 
 - (instancetype)initWithSpecialDates:(NSDictionary *)specialDateData;
 

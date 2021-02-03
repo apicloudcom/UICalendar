@@ -10,17 +10,23 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.text.TextUtils;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.View.OnTouchListener;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
@@ -33,7 +39,7 @@ import com.uzmap.pkg.uzkit.UZUtility;
 
 public class UICalendar extends UZModule {
 
-	private CalendarView mCalendarView;
+	private HashMap<Integer, CalendarView> views =  new HashMap<Integer, CalendarView>();
 
 	public static final String TAG = CalendarView.class.getSimpleName();
 
@@ -42,6 +48,7 @@ public class UICalendar extends UZModule {
 	}
 
 	private Config config;
+	private int id = 0;
 
 	@SuppressWarnings("deprecation")
 	public void jsmethod_open(UZModuleContext uzContext) {
@@ -51,139 +58,208 @@ public class UICalendar extends UZModule {
 		LayoutParams parms = new LayoutParams(config.w, config.h);
 		parms.setMargins(config.x, config.y, 0, 0);
 
-		if (mCalendarView == null) {
-			mCalendarView = initView(uzContext, config.specialDateList,
-					config.w, config.h, config);
-		} else {
-			removeViewFromCurWindow(mCalendarView);
-			mCalendarView = initView(uzContext, config.specialDateList,
-					config.w, config.h, config);
-			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-					config.w, config.h);
-			mCalendarView.setLayoutParams(params);
-		}
+		id ++;
+		CalendarView mCalendarView = initView(uzContext, config.specialDateList,config.w, config.h, config,id);
+		views.put(id, mCalendarView);
+//		} else {
+//			removeViewFromCurWindow(mCalendarView);
+//			mCalendarView = initView(uzContext, config.specialDateList,config.w, config.h, config);
+//			RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(config.w, config.h);
+//			mCalendarView.setLayoutParams(params);
+//		}
 
 		mCalendarView.setConfig(config);
 
 		if (config.bgBitmap != null) {
-			mCalendarView.setBackgroundDrawable(new BitmapDrawable(
-					config.bgBitmap));
+			mCalendarView.setBackgroundDrawable(new BitmapDrawable(config.bgBitmap));
 		} else {
 			mCalendarView.setBackgroundColor(config.bg);
 		}
+		if (!TextUtils.isEmpty(config.fixedOn) && !config.fixed) {
+			
+			insertViewToCurWindow(mCalendarView, parms, config.fixedOn, config.fixed);
+		}else {
+			
+			insertViewToCurWindow(mCalendarView, parms);
+		}
 		
-		insertViewToCurWindow(mCalendarView, parms, config.fixedOn,
-				config.fixed);
 	}
 
 	private CalendarView initView(UZModuleContext uzContext,
 			ArrayList<SpecicalDateStyle> specialDates, int width, int height,
-			Config config) {
+			Config config,int id) {
 
 		int calendarId = UZResourcesIDFinder
 				.getResLayoutID("mo_uicalendar_view_layout");
-		CalendarView calanderView = (CalendarView) View.inflate(mContext,
-				calendarId, null);
-		LinearLayout.LayoutParams params = new android.widget.LinearLayout.LayoutParams(
+		CalendarView calanderView = (CalendarView) LayoutInflater.from(mContext).inflate(calendarId, null);
+//		CalendarView calanderView = (CalendarView) View.inflate(mContext,
+//				calendarId, null);
+		LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
 				width, height);
 		calanderView.setLayoutParams(params);
-		calanderView.init(uzContext, specialDates, UZUtility.dipToPix(height),
-				config);
+		calanderView.setViewId(id);
+		calanderView.init(uzContext, specialDates, UZUtility.dipToPix(height),config);
 
 		return calanderView;
 	}
 
 	public void jsmethod_nextMonth(UZModuleContext uzContext) {
-		if (mCalendarView != null) {
-			mCalendarView.showNextMonth(uzContext);
+		int id = uzContext.optInt("id");
+		for (Integer viewId: views.keySet()) {
+			if (viewId == id) {
+				views.get(viewId).showNextMonth(uzContext);
+				return;
+			}
 		}
 	}
 
 	public void jsmethod_prevMonth(UZModuleContext uzContext) {
-		if (mCalendarView != null) {
-			mCalendarView.showPreviousMonth(uzContext);
+		
+		int id = uzContext.optInt("id");
+		for (Integer viewId: views.keySet()) {
+			if (viewId == id) {
+				views.get(viewId).showPreviousMonth(uzContext);
+				return;
+			}
 		}
+//		if (mCalendarView != null) {
+//			mCalendarView.showPreviousMonth(uzContext);
+//		}
 	}
 
 	public void jsmethod_nextYear(UZModuleContext uzContext) {
-		if (mCalendarView != null) {
-			mCalendarView.nextYears(uzContext);
+		int id = uzContext.optInt("id");
+		for (Integer viewId: views.keySet()) {
+			if (viewId == id) {
+				views.get(viewId).nextYears(uzContext);
+				return;
+			}
 		}
+//		if (mCalendarView != null) {
+//			mCalendarView.nextYears(uzContext);
+//		}
 	}
 
 	public void jsmethod_prevYear(UZModuleContext uzContext) {
-		if (mCalendarView != null) {
-			mCalendarView.previousYears(uzContext);
+		int id = uzContext.optInt("id");
+		for (Integer viewId: views.keySet()) {
+			if (viewId == id) {
+				views.get(viewId).previousYears(uzContext);
+				return;
+			}
 		}
+		
+//		if (mCalendarView != null) {
+//			mCalendarView.previousYears(uzContext);
+//		}
 	}
 
 	public void jsmethod_close(UZModuleContext uzContext) {
-		removeViewFromCurWindow(mCalendarView);
-		mCalendarView = null;
+		
+		int id = uzContext.optInt("id");
+		for (Integer viewId: views.keySet()) {
+			if (viewId == id) {
+				removeViewFromCurWindow(views.get(viewId));
+				views.remove(viewId);
+				return;
+			}
+		}
+		
 	}
 
 	public void jsmethod_hide(UZModuleContext uzContext) {
-		if (mCalendarView != null) {
-			mCalendarView.setVisibility(View.GONE);
+		int id = uzContext.optInt("id");
+		for (Integer viewId: views.keySet()) {
+			if (viewId == id) {
+				views.get(viewId).setVisibility(View.GONE);
+				return;
+			}
 		}
+		
+//		if (mCalendarView != null) {
+//			mCalendarView.setVisibility(View.GONE);
+//		}
 	}
 
 	public void jsmethod_show(UZModuleContext uzContext) {
-		if (mCalendarView != null) {
-			mCalendarView.setVisibility(View.VISIBLE);
+		int id = uzContext.optInt("id");
+		for (Integer viewId: views.keySet()) {
+			if (viewId == id) {
+				views.get(viewId).setVisibility(View.VISIBLE);
+				return;
+			}
 		}
+		
+//		if (mCalendarView != null) {
+//			mCalendarView.setVisibility(View.VISIBLE);
+//		}
 	}
 
 	public void jsmethod_setDate(UZModuleContext uzContext) {
 		String dateText = uzContext.optString("date");
 		boolean ignoreSelected = uzContext.optBoolean("ignoreSelected");
+		
+		int id = uzContext.optInt("id");
+		for (Integer viewId: views.keySet()) {
+			if (viewId == id) {
+				CalendarView mCalendarView = views.get(viewId);
+				if (!TextUtils.isEmpty(dateText)) {
+					mCalendarView.setDate(dateText, uzContext, ignoreSelected);
+				} else {
+					Calendar calendar = Calendar.getInstance();
+					int year = calendar.get(Calendar.YEAR);
+					int month = calendar.get(Calendar.MONTH) + 1;
+					int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-		if (!TextUtils.isEmpty(dateText)) {
-			mCalendarView.setDate(dateText, uzContext, ignoreSelected);
-		} else {
-			Calendar calendar = Calendar.getInstance();
-			int year = calendar.get(Calendar.YEAR);
-			int month = calendar.get(Calendar.MONTH) + 1;
-			int day = calendar.get(Calendar.DAY_OF_MONTH);
+					String currentDate = year + "-" + month + "-" + day;
+					mCalendarView.setDate(currentDate, uzContext, ignoreSelected);
 
-			String currentDate = year + "-" + month + "-" + day;
-			mCalendarView.setDate(currentDate, uzContext, ignoreSelected);
-
+				}
+				return;
+			}
 		}
+		
 	}
 
 	public void jsmethod_setSpecialDates(UZModuleContext uzContext) {
 
 		JSONArray specialDates = uzContext.optJSONArray("specialDates");
-		if (specialDates != null) {
-			for (int i = 0; i < specialDates.length(); i++) {
+		
+		int id = uzContext.optInt("id");
+		for (Integer viewId: views.keySet()) {
+			if (viewId == id) {
+				CalendarView mCalendarView = views.get(viewId);
+				if (specialDates != null) {
+					for (int i = 0; i < specialDates.length(); i++) {
 
-				JSONObject styleObj = specialDates.optJSONObject(i);
+						JSONObject styleObj = specialDates.optJSONObject(i);
 
-				SpecicalDateStyle styleItem = parseStyle(styleObj);
+						SpecicalDateStyle styleItem = parseStyle(styleObj);
 
-				if (!config.specialDateList.contains(styleItem)) {
-					config.specialDateList.add(styleItem);
-				} else {
-					SpecicalDateStyle tmp = findSpecialDate(
-							config.specialDateList, styleObj.optString("date"));
-					setSpecialStyle(tmp, styleItem);
+						if (!config.specialDateList.contains(styleItem)) {
+							config.specialDateList.add(styleItem);
+						} else {
+							SpecicalDateStyle tmp = findSpecialDate(
+									config.specialDateList, styleObj.optString("date"));
+							setSpecialStyle(tmp, styleItem);
+						}
+						
+						if (mCalendarView != null) {
+							mCalendarView.setSpecialDates(config.specialDateList);
+						}
+					}
 				}
-				
-				if (mCalendarView != null) {
-					mCalendarView.setSpecialDates(config.specialDateList);
-				}
+				return;
 			}
 		}
+		
 	}
 
-	public void setSpecialStyle(SpecicalDateStyle oldStyle,
-			SpecicalDateStyle newStyle) {
+	public void setSpecialStyle(SpecicalDateStyle oldStyle,SpecicalDateStyle newStyle) {
 
 		if (oldStyle == null || newStyle == null) {
 			return;
 		}
-
 		oldStyle.bg = newStyle.bg;
 		oldStyle.bgColor = newStyle.bgColor;
 		if (newStyle.hasBg) {
@@ -211,7 +287,6 @@ public class UICalendar extends UZModule {
 				eStyle.bgColor = UZUtility.parseCssColor(styleObj
 						.optString("bg"));
 			}
-
 		}
 
 		if (!styleObj.isNull("color")
@@ -237,9 +312,7 @@ public class UICalendar extends UZModule {
 				return sDt;
 			}
 		}
-
 		return null;
-
 	}
 
 	public Bitmap getBitmap(String path) {
@@ -247,9 +320,7 @@ public class UICalendar extends UZModule {
 		if (TextUtils.isEmpty(path)) {
 			return null;
 		}
-
 		String realPath = UZUtility.makeRealPath(path, this.getWidgetInfo());
-
 		try {
 			InputStream input = UZUtility.guessInputStream(realPath);
 			Bitmap bitmap = BitmapFactory.decodeStream(input);
@@ -266,6 +337,7 @@ public class UICalendar extends UZModule {
 	public void jsmethod_cancelSpecialDates(UZModuleContext uzContext) {
 		JSONArray specialDatesArray = uzContext.optJSONArray("specialDates");
 		String[] datesArr = null;
+		
 		if (specialDatesArray != null) {
 			datesArr = new String[specialDatesArray.length()];
 			for (int i = 0; i < specialDatesArray.length(); i++) {
@@ -273,28 +345,42 @@ public class UICalendar extends UZModule {
 			}
 		}
 
-		if (mCalendarView != null) {
-			mCalendarView.removeSpecialDates(datesArr);
+		int id = uzContext.optInt("id");
+		for (Integer viewId: views.keySet()) {
+			if (viewId == id) {
+				CalendarView mCalendarView = views.get(viewId);
+				if (mCalendarView != null) {
+					mCalendarView.removeSpecialDates(datesArr);
+				}
+				return;
+			}
 		}
-
+		
 	}
 	
 	public void jsmethod_turnPage(UZModuleContext uzContext){
 		String dateText = verifyDate(uzContext.optString("date"));
+		int id = uzContext.optInt("id");
+		for (Integer viewId: views.keySet()) {
+			if (viewId == id) {
+				CalendarView mCalendarView = views.get(viewId);
+				if (!TextUtils.isEmpty(dateText)) {
+					mCalendarView.setDate(dateText, uzContext, true);
+				} else {
+					
+					Calendar calendar = Calendar.getInstance();
+					int year = calendar.get(Calendar.YEAR);
+					int month = calendar.get(Calendar.MONTH) + 1;
+					int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-		if (!TextUtils.isEmpty(dateText)) {
-			mCalendarView.setDate(dateText, uzContext, true);
-		} else {
-			
-			Calendar calendar = Calendar.getInstance();
-			int year = calendar.get(Calendar.YEAR);
-			int month = calendar.get(Calendar.MONTH) + 1;
-			int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-			String currentDate = year + "-" + month + "-" + day;
-			mCalendarView.setDate(currentDate, uzContext, true);
-
+					String currentDate = year + "-" + month + "-" + day;
+					mCalendarView.setDate(currentDate, uzContext, true);
+				}
+				return;
+			}
 		}
+
+		
 	}
 	
 	public String verifyDate(String date){
@@ -305,6 +391,6 @@ public class UICalendar extends UZModule {
 			return date + "-01";
 		}
 		return date;
-		
 	}
+	
 }

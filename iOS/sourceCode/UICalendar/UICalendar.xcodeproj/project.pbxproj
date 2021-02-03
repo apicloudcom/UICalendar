@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		45495EA922AE0FCE004EDDA8 /* CalendarModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 45495EA822AE0FCE004EDDA8 /* CalendarModel.m */; };
 		67EB75412010D033004669CE /* UIView+cornerRadius.m in Sources */ = {isa = PBXBuildFile; fileRef = 67EB753F2010D033004669CE /* UIView+cornerRadius.m */; };
 		717C53811B69C39600AEAA3B /* dateModel.m in Sources */ = {isa = PBXBuildFile; fileRef = 717C53751B69C39600AEAA3B /* dateModel.m */; };
 		717C53821B69C39600AEAA3B /* DateUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 717C53771B69C39600AEAA3B /* DateUtil.m */; };
@@ -34,6 +35,8 @@
 		03E8709E1BA68A1400E12CCF /* UZAppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UZAppDelegate.h; sourceTree = "<group>"; };
 		03E8709F1BA68A1400E12CCF /* UZAppUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UZAppUtils.h; sourceTree = "<group>"; };
 		03E870A01BA68A1400E12CCF /* UZModule.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = UZModule.h; sourceTree = "<group>"; };
+		45495EA722AE0FCE004EDDA8 /* CalendarModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CalendarModel.h; sourceTree = "<group>"; };
+		45495EA822AE0FCE004EDDA8 /* CalendarModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CalendarModel.m; sourceTree = "<group>"; };
 		67EB753F2010D033004669CE /* UIView+cornerRadius.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "UIView+cornerRadius.m"; sourceTree = "<group>"; };
 		67EB75402010D033004669CE /* UIView+cornerRadius.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIView+cornerRadius.h"; sourceTree = "<group>"; };
 		717C53591B69C31B00AEAA3B /* libUICalendar.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libUICalendar.a; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -83,6 +86,8 @@
 				717C53731B69C39600AEAA3B /* SACalendar */,
 				718773461B6EF4F200EACC42 /* UZUICalendar.h */,
 				718773471B6EF4F200EACC42 /* UZUICalendar.m */,
+				45495EA722AE0FCE004EDDA8 /* CalendarModel.h */,
+				45495EA822AE0FCE004EDDA8 /* CalendarModel.m */,
 				717C53741B69C39600AEAA3B /* dateModel.h */,
 				717C53751B69C39600AEAA3B /* dateModel.m */,
 				71E905141C17FBA70054A861 /* specialDatesModel.h */,
@@ -156,6 +161,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 			);
 			mainGroup = 717C53501B69C31B00AEAA3B;
@@ -173,6 +179,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				45495EA922AE0FCE004EDDA8 /* CalendarModel.m in Sources */,
 				717C53811B69C39600AEAA3B /* dateModel.m in Sources */,
 				717C53841B69C39600AEAA3B /* SACalendar.m in Sources */,
 				718773481B6EF4F200EACC42 /* UZUICalendar.m in Sources */,

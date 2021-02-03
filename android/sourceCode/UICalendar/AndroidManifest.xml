@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.apicloud.pkg.sdk"
+    package="com.apicloud.uicalendar"
     android:versionCode="2"
     android:versionName="1.0.0" >
 
-    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="20" />
+    <uses-sdk android:minSdkVersion="9" android:targetSdkVersion="26" />
     
     <supports-screens
         android:anyDensity="true"

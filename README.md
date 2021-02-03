@@ -70,8 +70,8 @@ rect：
 {
     x: 0,   //（可选项）数字类型；模块左上角的 x 坐标（相对于所属的 Window 或 Frame）；默认：0
     y: 0,   //（可选项）数字类型；模块左上角的 y 坐标（相对于所属的 Window 或 Frame）；默认：0
-    w: 320, //（可选项）数字类型；模块的宽度；默认：所属的 Window 或 Frame 的宽度
-    h: 220  //（可选项）数字类型；模块的高度；默认：220
+    w: 320, //（可选项）数字类型；仅iOS支持设置'auto'；模块的宽度；默认：所属的 Window 或 Frame 的宽度
+    h: 220  //（可选项）数字类型；仅iOS支持设置'auto'；模块的高度；默认：220
 }
 ```
 
@@ -130,6 +130,25 @@ switchMode：
     - horizontal（左右切换）
     - none（不支持通过手势切换月份）
 
+    
+isBefore：
+
+- 类型：布尔
+- 描述：（可选项）今天以前的日期是否置灰不可选
+- 默认值：false
+
+isAfter：
+
+- 类型：布尔
+- 描述：（可选项）今天以后的日期是否置灰不可选
+- 默认值：false
+
+showTodayStyle：
+
+- 类型：布尔
+- 描述：（可选项）当天日期是否使用特殊格式显示（仅android有效）
+- 默认值：true
+
 fixedOn：
 
 - 类型：字符串类型
@@ -162,7 +181,8 @@ ret：
                                                                                                 
 	year: 2015,                 //数字类型；当前选择的年份
 	month: 7,                   //数字类型；当前选择的月份
-	day: 27                     //数字类型；当前选择的日期
+	day: 27,                     //数字类型；当前选择的日期
+	id:0                      //数字类型，打开日历视图的ID
 }
 ```
 
@@ -230,6 +250,12 @@ setSpecialDates({params})
 
 ## params
 
+
+id:
+
+- 类型：数字类型
+- 描述：日历视图id
+
 specialDates：
 
 - 类型：数组
@@ -248,6 +274,7 @@ specialDates：
 ```js
 var UICalendar = api.require('UICalendar');
 UICalendar.setSpecialDates({
+	id: ,
 	specialDates: [{
 		date: '2015-12-07',
 		color: '#abckde',
@@ -275,6 +302,12 @@ cancelSpecialDates({params})
 
 ## params
 
+
+id:
+
+- 类型：数字类型
+- 描述：日历视图id
+
 specialDates：
 
 - 类型：数组
@@ -300,13 +333,21 @@ iOS系统，Android系统
 
 关闭日历
 
-close()
+close({params})
+
+## params
+
+
+id:
+
+- 类型：数字类型
+- 描述：日历视图id
 
 ## 示例代码
 
 ```js
 var UICalendar = api.require('UICalendar');
-UICalendar.close();
+UICalendar.close({id:0});
 ```
 
 ## 可用性
@@ -321,13 +362,22 @@ iOS系统，Android系统
 
 显示日历
 
-show()
+show({params})
+
+## params
+
+
+id:
+
+- 类型：数字类型
+- 描述：日历视图id
+
 
 ## 示例代码
 
 ```js
 var UICalendar = api.require('UICalendar');
-UICalendar.show();
+UICalendar.show({id:0});
 ```
 
 ## 可用性
@@ -342,13 +392,21 @@ iOS系统，Android系统
 
 隐藏日历
 
-hide()
+hide({params})
+
+## params
+
+
+id:
+
+- 类型：数字类型
+- 描述：日历视图id
 
 ## 示例代码
 
 ```js
 var UICalendar = api.require('UICalendar');
-UICalendar.hide();
+UICalendar.hide({id:0});
 ```
 
 ## 可用性
@@ -363,7 +421,15 @@ iOS系统，Android系统
 
 显示下个月
 
-nextMonth(callback(ret))
+nextMonth({params},callback(ret))
+
+## params
+
+
+id:
+
+- 类型：数字类型
+- 描述：日历视图id
 
 ## callback(ret)
 
@@ -383,7 +449,9 @@ ret：
 
 ```js
 var UICalendar = api.require('UICalendar');
-UICalendar.nextMonth(function(ret, err) {
+UICalendar.nextMonth({
+  id:0
+},function(ret, err) {
 	if (ret) {
 		alert(JSON.stringify(ret));
 	} else {
@@ -404,7 +472,14 @@ iOS系统，Android系统
 
 显示上个月
 
-prevMonth(callback(ret))
+prevMonth({params},callback(ret))
+
+## params
+
+id:
+
+- 类型：数字类型
+- 描述：日历视图id
 
 ## callback(ret)
 
@@ -424,7 +499,9 @@ ret：
 
 ```js
 var UICalendar = api.require('UICalendar');
-UICalendar.prevMonth(function(ret, err) {
+UICalendar.prevMonth({
+  id:0
+},function(ret, err) {
 	if (ret) {
 		alert(JSON.stringify(ret));
 	} else {
@@ -445,7 +522,14 @@ iOS系统，Android系统
 
 显示下一年
 
-nextYear(callback(ret))
+nextYear({params},callback(ret))
+
+## params
+
+id:
+
+- 类型：数字类型
+- 描述：日历视图id
 
 ## callback(ret)
 
@@ -465,7 +549,9 @@ ret：
 
 ```js
 var UICalendar = api.require('UICalendar');
-UICalendar.nextYear(function(ret, err) {
+UICalendar.nextYear({
+ id:0
+},function(ret, err) {
 	if (ret) {
 		alert(JSON.stringify(ret));
 	} else {
@@ -486,7 +572,14 @@ iOS系统，Android系统
 
 显示上一年
 
-prevYear(callback(ret, err))
+prevYear({params},callback(ret))
+
+## params
+
+id:
+
+- 类型：数字类型
+- 描述：日历视图id
 
 ## callback(ret, err)
 
@@ -506,7 +599,9 @@ ret：
 
 ```js
 var UICalendar = api.require('UICalendar');
-UICalendar.prevYear(function(ret, err) {
+UICalendar.prevYear({
+ id:0
+},function(ret, err) {
 	if (ret) {
 		alert(JSON.stringify(ret));
 	} else {
@@ -530,6 +625,14 @@ iOS系统，Android系统
 setDate({params}, callback(ret))
 
 ## params
+
+
+id:
+
+- 类型：数字类型
+- 描述：日历视图id
+
+
 
 date：
 
@@ -562,7 +665,8 @@ ret：
 var UICalendar = api.require('UICalendar');
 UICalendar.setDate({
 	date: '2015-08-08',
-	ignoreSelected: false
+	ignoreSelected: false,
+	id:0
 }, function(ret, err) {
 	if (ret.status) {
 		alert(JSON.stringify(ret));
@@ -588,6 +692,11 @@ turnPage({params})
 
 ## params
 
+id:
+
+- 类型：数字类型
+- 描述：日历视图id
+
 date：
 
 - 类型：字符串
@@ -607,3 +716,7 @@ UICalendar.turnPage({
 iOS系统，Android系统
 
 可提供的1.0.0及更高版本
+
+# 论坛示例
+
+为帮助用户更好更快的使用模块，论坛维护了一个[示例](https://community.apicloud.com/bbs/thread-114627-1-1.html)，示例中包含示例代码、知识点讲解、注意事项等，供您参考。

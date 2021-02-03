@@ -21,13 +21,25 @@
 </head>
 
 <body>
+   
     <button type="button" onclick="UICalendar1()" name="button">UICalendar1</button>
+    <button type="button" onclick="closeCalendar1()" name="button">closeCalendar1</button>
     <button type="button" onclick="setSpecialDates()" name="button">setSpecialDates</button>
     <button type="button" onclick="newRecipeNotice1()" name="button">newRecipeNotice</button>
+    <button type="button" onclick="nextMonth()" name="button">nextMonth</button>
+    <button type="button" onclick="prevMonth()" name="button">prevMonth</button>
+    <button type="button" onclick="prevSetDate()" name="button">SetDate</button>
+    
+    <button type="button" onclick="cancelSpecial()" name="button">cancelSpecial</button>
+    
+    <button type="button" onclick="fnInitCalendar()"> fnInitCalendar </button>
+    
 </body>
 <script type="text/javascript" src="../script/api.js"></script>
 <script type="text/javascript" src="../script/jq.js"></script>
 <script type="text/javascript">
+
+
     var newRecipeNotice = [];
     var specialDateList = [];
     var cancleDate = [];
@@ -104,21 +116,58 @@
             // newRecipeNotice.remove(clickDay);
         }
     }
+    
+    function cancelSpecial(){
+    	var UICalendar = api.require('UICalendar');
+		UICalendar.cancelSpecialDates({
+			id:1,
+    		specialDates: ['2019-6-20']
+		});
+    }
 
 
     function setSpecialDates() {
         //  alert(810);
         var UICalendar = api.require('UICalendar');
         UICalendar.setSpecialDates({
+       		id:1,
             specialDates: [{
-                date: '2017-08-10',
+                date: '2020-01-18',
                 color: '#ff0000',
                 bg: '#333333'
             }, {
-                date: '2015-12-08',
+                date: '2020-01-19',
                 color: '#abckde',
                 bg: '#ff0000'
             }]
+        });
+    }
+    
+    function prevMonth() {
+        var UICalendar = api.require('UICalendar');
+        UICalendar.prevMonth({
+       		id:1,
+        });
+    }
+    
+    function closeCalendar1() {
+        var UICalendar = api.require('UICalendar');
+        UICalendar.close({
+       		id:1,
+        });
+    }
+    
+    function nextMonth() {
+        var UICalendar = api.require('UICalendar');
+        UICalendar.nextMonth({
+       		id:1,
+        });
+    }
+    
+    function nextMonth() {
+        var UICalendar = api.require('UICalendar');
+        UICalendar.nextMonth({
+       		id:1,
         });
     }
 
@@ -167,59 +216,58 @@
         //     }
         // });
         var UICalendar = api.require('UICalendar');
-        UICalendar.open({
-        	multipleSelect:true,
-            rect: {
-                x: 0,
-                // y: api.frameHeight / 2 - 200,
-                y: 100,
-                w: api.frameWidth,
-                h: 340
-            },
-            styles: {
-                bg: 'rgba(0,0,0,0)',
-                week: {
-                    weekdayColor: '#3b3b3b',
-                    //        weekendColor: '#b3b3b3',
-                    weekendColor: 'rgb(179, 179, 204)',
-                    size: 20
-                },
-                date: { //selected date
-                    color: '#3b3b3b',
-                    selectedColor: '#fff',
-                    selectedBg: '#00ff00',
-                    size: 20
-                },
-                today: {
-                    color: 'rgb(230,46,37)',
-                    bg: ''
-                },
-                specialDate: {
-                    color: '#a8d500',
-                    //bg: 'widget:../image/blank.gif'
-                },
-            },
-            //specialDate: [{
-            //  date: '2016-05-03'
-            //}],
-            switchMode : 'vertical', //change month: vertical, vertical, none
-            fixedOn: api.frameName,
-            fixed: false
-        }, function(ret, err) {
+			UICalendar.open({
+				rect : {
+					x : 0,
+					y : 300,
+					w : api.frameWidth,
+					h : 280
+				},
+				styles : {
+					bg : '#81a9c3',
+					week : {
+						weekdayColor : '#3b3b3b',
+						weekendColor : '#a8d400',
+						size : 12
+					},
+					date : {
+						color : '#3b3b3b',
+						selectedColor : '#fff',
+						selectedBg : '#a8d500',
+						size : 12
+					},
+					today : {
+						color : 'rgb(230,46,37)',
+						bg : ''
+					},
+					specialDate : {
+						color : '#fff'
+					}
+				},
+				specialDate : [{
+					date : '2018-10-10',
+				},
+				{
+					date : '2019-06-21',
+				},
+				{
+					date : '2019-06-18',
+				}],
+				switchMode : 'vertical',
+				isBefore:false,
+				isAfter:true,
+				showTodayStyle:true,
+				multipleSelect:true,
+				fixed : true,
+				fixedOn : api.frameName
+			}, function(ret, err) {
+				if (ret) {
+				alert(JSON.stringify(ret));
+				} else {
+					alert(JSON.stringify(err));
+				}
+			});
         
-        	alert(JSON.stringify(ret));
-        
-           /* if(ret.eventType == 'normal'){
-        	
-        		var dateStr = ret.year + '-' + ret.month + '-' + ret.day;
-        		var UICalendar = api.require('UICalendar');
-				UICalendar.setDate({
-    				date: dateStr,
-    				ignoreSelected: true
-				}, function(ret, err) {
-				});
-        	}*/
-        });
         api.addEventListener({
             name: 'shake'
         }, function(ret, err) {
@@ -234,8 +282,9 @@
     };
     
     apiready = function() {
-        UICalendar1();
+        // UICalendar1();
     }
+    
     
 </script>
 
